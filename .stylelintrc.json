@@ -1,0 +1,12 @@
+{
+  "extends": "stylelint-config-sass-guidelines",
+  "rules": {
+    "declaration-block-semicolon-newline-after": null,
+    "max-nesting-depth": [
+      2,
+      {
+        "ignore": ["pseudo-classes", "blockless-at-rules"]
+      }
+    ]
+  }
+}
