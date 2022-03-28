@@ -19,12 +19,14 @@ export const useManageColumnModal = ({
   const [isValuesTouched, setIsValuesTouched] = useState({
     name: false,
     numberOfTasks: false,
+    numberOfTasksPerMember: false,
   });
   const [inputValues, setInputValues] = useState({
     name: '',
     numberOfTasks: '',
+    numberOfTasksPerMember: '',
   });
-  const { name, numberOfTasks } = inputValues;
+  const { name, numberOfTasks, numberOfTasksPerMember } = inputValues;
 
   const changeNameHandler = (event: ChangeEvent<HTMLInputElement>) => {
     setInputValues((prevValues) => ({
@@ -48,6 +50,19 @@ export const useManageColumnModal = ({
     }));
   };
 
+  const changeNumberOfTasksPerMemberHandler = (
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
+    setInputValues((prevValues) => ({
+      ...prevValues,
+      numberOfTasksPerMember: event.target.value,
+    }));
+    setIsValuesTouched((prevValues) => ({
+      ...prevValues,
+      numberOfTasksPerMember: true,
+    }));
+  };
+
   const changeColorHandler = (pickedColor: ColorResult) =>
     setColor(pickedColor.hex);
 
@@ -65,6 +80,7 @@ export const useManageColumnModal = ({
       setInputValues({
         name: modalInfo.name,
         numberOfTasks: `${modalInfo.numberOfTasks}`,
+        numberOfTasksPerMember: `${modalInfo.numberOfTasksPerMember}`,
       });
       setColor(modalInfo.color);
     }
@@ -75,10 +91,15 @@ export const useManageColumnModal = ({
     !numberOfTasks.trim().match(/^[0-9]+[0-9]*$/) &&
     isValuesTouched.numberOfTasks;
 
+  const isNumberOfTasksPerMemberInvalid =
+    !numberOfTasksPerMember.trim().match(/^[0-9]+[0-9]*$/) &&
+    isValuesTouched.numberOfTasksPerMember;
+
   const haveValuesChanged =
     modalInfo.title === 'edit'
       ? name.trim() !== modalInfo.name ||
         +numberOfTasks !== modalInfo.numberOfTasks ||
+        +numberOfTasksPerMember !== modalInfo.numberOfTasksPerMember ||
         color !== modalInfo.color
       : isValuesTouched.name && isValuesTouched.numberOfTasks;
 
@@ -93,6 +114,7 @@ export const useManageColumnModal = ({
             color,
             name: name.trim(),
             numberOfTasks: +numberOfTasks,
+            numberOfTasksPerUsers: +numberOfTasksPerMember,
           },
           endpoint: 'columns',
         })
@@ -102,6 +124,7 @@ export const useManageColumnModal = ({
             color,
             name: name.trim(),
             numberOfTasks: +numberOfTasks,
+            numberOfTasksPerUsers: +numberOfTasksPerMember,
           },
           endpoint: `columns/${modalInfo.id}`,
         });
@@ -111,13 +134,16 @@ export const useManageColumnModal = ({
     manageColumnHandler,
     changeColorHandler,
     changeNumberOfTasksHandler,
+    changeNumberOfTasksPerMemberHandler,
     changeNameHandler,
     isLoading,
     isNameInvalid,
     isNumberOfTasksInvalid,
+    isNumberOfTasksPerMemberInvalid,
     haveValuesChanged,
     color,
     name,
     numberOfTasks,
+    numberOfTasksPerMember,
   };
 };

@@ -39,6 +39,7 @@ module.exports = {
         tsx: 'never',
       },
     ],
+    'import/no-cycle': 0,
     'no-use-before-define': 1,
     'arrow-body-style': 0,
     'react/function-component-definition': 0,

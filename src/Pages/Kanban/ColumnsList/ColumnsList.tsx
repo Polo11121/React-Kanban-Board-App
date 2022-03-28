@@ -1,141 +1,147 @@
-import { Column } from 'Components';
-import { ColumnType, TaskType } from 'shared/types/Kanban';
+import { useState } from 'react';
 import { TasksList } from 'Pages/Kanban/TasksList/TasksList';
 import { ManageTaskModal } from 'Pages/Kanban/ManageTaskModal/ManageTaskModal';
 import { useColumnList } from 'Pages/Kanban/helpers/useColumnList';
-import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
-import { CircularProgress, Backdrop } from '@mui/material';
-import { useMoveTask } from 'Pages/Kanban/helpers/useMoveTask';
+import { Column, MemberName } from 'Components';
+import { ColumnType } from 'shared/types/Kanban';
+import { useCustomToast } from 'shared/helpers/useCustomToast';
+import { Droppable } from 'react-beautiful-dnd';
 import AddIcon from '@mui/icons-material/Add';
 import classes from './ColumnList.module.scss';
 
 type ColumnsListType = {
-  onDelete: (id: string) => void;
-  onEdit: ({
-    id,
-    name,
-    numberOfTasks,
-    color,
-    tasks,
-  }: {
-    id: string;
-    name: string;
-    numberOfTasks: number;
-    color: string;
-    tasks: TaskType[];
-  }) => void;
+  user: { id: string; name: string };
   columns: ColumnType[];
 };
 
-export const ColumnsList = ({ columns, onDelete, onEdit }: ColumnsListType) => {
+export const ColumnsList = ({ columns, user }: ColumnsListType) => {
+  const [isOpen, setIsOpen] = useState(
+    Boolean(localStorage.getItem(user.name))
+  );
+
   const {
     showModalHandler,
     deleteTaskHandler,
     editTaskHandler,
     manageTaskModalInfo,
     hideModalHandler,
+    removeMemberHandler,
   } = useColumnList();
 
-  const {
-    moveTask,
-    sourceColumnId,
-    destinationColumnId,
-    setMovedTaskIndex,
-    movedTaskIndex,
-  } = useMoveTask();
+  const memberNumberOfTasks = columns.reduce(
+    (sum, column) =>
+      sum + column.tasks.filter(({ idUser }) => idUser === user.id).length,
+    0
+  );
 
-  const handleMoveTask = (result: DropResult) => {
-    const { source, destination } = result;
-    setMovedTaskIndex(source.index);
-    if (source.droppableId === destination?.droppableId || !destination) {
-      return;
+  const hideColumnsHandler = () => {
+    setIsOpen((prevState) => !prevState);
+    if (isOpen) {
+      localStorage.setItem(user.name, '');
+    } else {
+      localStorage.setItem(user.name, 'open');
     }
+  };
 
-    const task = columns.find(({ id }) => id === source.droppableId)?.tasks[
-      source.index
-    ];
-    if (task && destination) {
-      moveTask({
-        task,
-        sourceColumnId: source.droppableId,
-        destinationColumnId: destination.droppableId,
+  const handleRemoveMember = () => {
+    if (memberNumberOfTasks > 0) {
+      useCustomToast({
+        text: `Remove tasks from ${user.name} first`,
+        type: 'error',
       });
+    } else {
+      removeMemberHandler(user.id);
     }
   };
 
   return (
-    <DragDropContext onDragEnd={handleMoveTask}>
-      {columns.map(({ name, color, id, numberOfTasks, tasks }) => (
-        <Droppable key={id} droppableId={id}>
-          {(droppableProvided) => (
-            <div
-              {...droppableProvided.droppableProps}
-              ref={droppableProvided.innerRef}
-            >
-              <Column
-                tasks={tasks}
-                title={name}
-                color={
-                  tasks.length > numberOfTasks && numberOfTasks ? 'red' : color
-                }
-                numberOfTasks={numberOfTasks}
-                id={id}
-                onDelete={onDelete}
-                onEdit={onEdit}
-              >
-                <>
-                  {destinationColumnId && sourceColumnId && (
-                    <Backdrop
-                      open
-                      sx={{
-                        color: '#fff',
-                        zIndex: (theme) => theme.zIndex.drawer + 1,
-                      }}
-                    >
-                      <CircularProgress color="success" />
-                    </Backdrop>
-                  )}
-                  <div className={classes['column-list__task-list']}>
-                    <TasksList
-                      columnId={id}
-                      onDelete={deleteTaskHandler}
-                      onEdit={editTaskHandler}
-                      color={
-                        tasks.length > numberOfTasks && numberOfTasks
-                          ? 'red'
-                          : color
-                      }
-                      tasks={
-                        id === sourceColumnId
-                          ? tasks.filter(
-                              (task, index) => index !== movedTaskIndex
-                            )
-                          : tasks
-                      }
-                    />
-                    {droppableProvided.placeholder}
-                  </div>
-                  <button
-                    className={classes['column-list__add-task-button']}
-                    type="button"
-                    onClick={() => showModalHandler(id)}
-                    data-testid={`${name}-column-add-task`}
-                  >
-                    <AddIcon />
-                    Add Task
-                  </button>
-                </>
-              </Column>
-            </div>
-          )}
-        </Droppable>
-      ))}
+    <div className={classes['column-list__content']}>
+      <MemberName
+        name={user.name}
+        isOpen={isOpen}
+        handleRemoveMember={handleRemoveMember}
+        hideColumnsHandler={hideColumnsHandler}
+        memberNumberOfTasks={memberNumberOfTasks}
+      />
+      <div style={{ display: `${isOpen ? 'flex' : 'none'}` }}>
+        {columns.map(
+          ({
+            name,
+            color,
+            id,
+            numberOfTasks,
+            tasks,
+            numberOfTasksPerUsers,
+          }) => (
+            <Droppable key={id} droppableId={`${id}:${user.id}`}>
+              {(droppableProvided) => (
+                <div
+                  {...droppableProvided.droppableProps}
+                  ref={droppableProvided.innerRef}
+                >
+                  <Column title={name}>
+                    <>
+                      <div
+                        style={{
+                          minHeight: `${
+                            Math.max(
+                              1,
+                              ...columns.map(
+                                ({ tasks: columnTasks }) =>
+                                  columnTasks.filter(
+                                    ({ idUser }) => idUser === user.id
+                                  ).length
+                              )
+                            ) *
+                              220 +
+                            18
+                          }px`,
+                        }}
+                        className={classes['column-list__task-list']}
+                      >
+                        <TasksList
+                          idUser={user.id}
+                          columnId={id}
+                          onDelete={deleteTaskHandler}
+                          onEdit={editTaskHandler}
+                          color={
+                            (tasks.length > numberOfTasks && numberOfTasks) ||
+                            (tasks.filter(({ idUser }) => idUser === user.id)
+                              .length > numberOfTasksPerUsers &&
+                              numberOfTasksPerUsers &&
+                              user.name !== 'Unassigned')
+                              ? 'red'
+                              : color
+                          }
+                          tasks={tasks.filter(
+                            ({ idUser }) => idUser === user.id
+                          )}
+                        />
+                        {droppableProvided.placeholder}
+                      </div>
+                      <button
+                        className={classes['column-list__add-task-button']}
+                        type="button"
+                        onClick={() => showModalHandler(id, user.id)}
+                        data-testid={`${name}-column-add-task`}
+                      >
+                        <AddIcon />
+                        Add Task
+                      </button>
+                    </>
+                  </Column>
+                </div>
+              )}
+            </Droppable>
+          )
+        )}
+      </div>
       {manageTaskModalInfo.isOpen && (
         <ManageTaskModal
           modalInfo={manageTaskModalInfo}
           onClose={hideModalHandler}
         />
       )}
-    </DragDropContext>
+    </div>
   );
 };

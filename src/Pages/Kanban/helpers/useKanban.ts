@@ -4,6 +4,7 @@ import { useGetColumns } from 'Hooks/useGetColumns';
 import { useManageColumn } from 'Hooks/useManageColumn';
 import { TaskType } from 'shared/types/Kanban';
 import { useCustomToast } from 'shared/helpers/useCustomToast';
+import { useGetUsers } from 'Hooks/useGetUsers';
 
 export const useKanban = () => {
   const queryClient = useQueryClient();
@@ -13,10 +14,12 @@ export const useKanban = () => {
     tasks: [] as unknown as TaskType[],
     color: '',
     numberOfTasks: 0,
+    numberOfTasksPerMember: 0,
     id: '',
     title: 'add',
   });
-  const { data } = useGetColumns();
+  const { columns, isLoading: isColumnsLoading } = useGetColumns();
+  const { users, isLoading: isUsersLoading } = useGetUsers();
 
   const hideModalHandler = () =>
     setManageColumnModalInfo({
@@ -25,6 +28,7 @@ export const useKanban = () => {
       tasks: [] as unknown as TaskType[],
       color: '',
       numberOfTasks: 0,
+      numberOfTasksPerMember: 0,
       id: '',
       title: 'add',
     });
@@ -39,6 +43,7 @@ export const useKanban = () => {
       tasks: [] as unknown as TaskType[],
       color: '',
       numberOfTasks: 0,
+      numberOfTasksPerMember: 0,
       id: '',
       title: 'add',
     });
@@ -56,11 +61,13 @@ export const useKanban = () => {
     name,
     numberOfTasks,
     color,
+    numberOfTasksPerMember,
     tasks,
   }: {
     id: string;
     name: string;
     numberOfTasks: number;
+    numberOfTasksPerMember: number;
     color: string;
     tasks: TaskType[];
   }) =>
@@ -70,6 +77,7 @@ export const useKanban = () => {
       tasks,
       color,
       numberOfTasks,
+      numberOfTasksPerMember,
       id,
       title: 'edit',
     });
@@ -79,7 +87,9 @@ export const useKanban = () => {
     deleteColumnHandler,
     showModalHandler,
     hideModalHandler,
-    data,
+    columns,
     manageColumnModalInfo,
+    users,
+    isLoading: isUsersLoading || isColumnsLoading,
   };
 };

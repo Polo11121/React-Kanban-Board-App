@@ -4,6 +4,7 @@ import { useQueryClient } from 'react-query';
 import { TaskModalInfoType } from 'shared/types/Kanban';
 import { useManageColumn } from 'Hooks/useManageColumn';
 import { useGetColumns } from 'Hooks/useGetColumns';
+import { useGetUsers } from 'Hooks/useGetUsers';
 
 type UseManageTaskModalProps = {
   onClose: () => void;
@@ -24,7 +25,8 @@ export const useManageTaskModal = ({
     description: '',
   });
   const { name, description } = inputValues;
-  const { data: columns } = useGetColumns();
+  const { columns } = useGetColumns();
+  const { users } = useGetUsers();
 
   const changeNameHandler = (event: ChangeEvent<HTMLInputElement>) => {
     setIsValuesTouched((prevValues) => ({
@@ -49,12 +51,14 @@ export const useManageTaskModal = ({
   };
 
   const onSuccess = () => {
+    const column = columns.find(({ id }) => id === modalInfo.columnId);
+    const userName = users.find(({ id }) => id === modalInfo.idUser)?.name;
     queryClient.invalidateQueries('columns');
     useCustomToast({
       text: `Task successfully ${modalInfo.title}ed`,
       type: 'success',
     });
-    const column = columns.find(({ id }) => id === modalInfo.columnId);
+
     if (
       column &&
       column?.tasks.length >= column?.numberOfTasks &&
@@ -62,6 +66,18 @@ export const useManageTaskModal = ({
     ) {
       useCustomToast({
         text: `Maximum number of tasks allowed in ${column.name} column has been reached`,
+        type: 'error',
+        autoClose: 2500,
+      });
+    } else if (
+      column &&
+      column?.tasks.filter(({ idUser }) => idUser === modalInfo.idUser)
+        .length >= column?.numberOfTasksPerUsers &&
+      column?.numberOfTasksPerUsers &&
+      userName !== 'Unassigned'
+    ) {
+      useCustomToast({
+        text: `${userName} exceeded maximum  number of tasks allowed in ${column.name} column`,
         type: 'error',
         autoClose: 2500,
       });
@@ -97,6 +113,7 @@ export const useManageTaskModal = ({
             name: name.trim(),
             description: description.trim(),
             column: modalInfo.columnId,
+            idUser: modalInfo.idUser,
           },
           endpoint: `tasks`,
         })
@@ -106,6 +123,7 @@ export const useManageTaskModal = ({
             name: name.trim(),
             description: description.trim(),
             column: modalInfo.columnId,
+            idUser: modalInfo.idUser,
           },
           endpoint: `tasks/${modalInfo.taskId}`,
         });

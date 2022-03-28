@@ -1,14 +1,26 @@
 .kanban {
   display: flex;
   flex-direction: row;
-  height: calc(100vh - 112px);
+  min-height: calc(100vh - 112px);
+  height: fit-content;
   justify-content: flex-start;
-  overflow-x: auto;
-  overflow-y: auto;
+  overflow: auto;
   padding: 1rem;
   width: calc(100% - 2rem);
 
+  &__content {
+    display: flex;
+    flex-direction: column;
+    height: 87vh;
+    overflow: auto;
+
+    @media only screen and (max-height: 800px) {
+      height: 84vh;
+    }
+  }
+
   &__add-column-button {
+    margin: 0.5rem 1rem 0;
     align-items: center;
     background-color: #e7e6e6;
     border: solid transparent;
@@ -20,7 +32,7 @@
     justify-content: center;
     opacity: 0.5;
     transition-duration: 0.4s;
-    width: 14.5rem;
+    min-width: 10rem;
 
     &:hover {
       background-color: #ccc7c7;

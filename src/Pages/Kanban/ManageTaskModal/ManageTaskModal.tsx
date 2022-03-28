@@ -1,8 +1,8 @@
 import { Modal } from 'Components';
-import CloseIcon from '@mui/icons-material/Close';
-import { Button, TextField } from '@mui/material';
-import { TaskModalInfoType } from 'shared/types/Kanban';
 import { useManageTaskModal } from 'Pages/Kanban/helpers/useManageTaskModal';
+import { TaskModalInfoType } from 'shared/types/Kanban';
+import { Button, TextField } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import classes from './ManageTaskModal.module.scss';
 
 type ManageTaskModalProps = {

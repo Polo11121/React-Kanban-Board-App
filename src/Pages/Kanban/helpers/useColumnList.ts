@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useCustomToast } from 'shared/helpers/useCustomToast';
 import { useManageColumn } from 'Hooks/useManageColumn';
+import { useRemoveMember } from 'Hooks/useRemoveMember';
 import { useQueryClient } from 'react-query';
 
 export const useColumnList = () => {
@@ -12,6 +13,7 @@ export const useColumnList = () => {
     description: '',
     taskId: '',
     title: 'add',
+    idUser: '',
   });
 
   const hideModalHandler = () =>
@@ -22,13 +24,15 @@ export const useColumnList = () => {
       description: '',
       taskId: '',
       title: 'add',
+      idUser: '',
     });
 
-  const showModalHandler = (id: string) =>
+  const showModalHandler = (id: string, idUser: string) =>
     setManageTaskModalInfo((prevInfo) => ({
       ...prevInfo,
       isOpen: true,
       columnId: id,
+      idUser,
     }));
 
   const onSuccess = () => {
@@ -39,6 +43,7 @@ export const useColumnList = () => {
       description: '',
       taskId: '',
       title: 'add',
+      idUser: '',
     });
     useCustomToast({ text: 'Task successfully deleted', type: 'success' });
     queryClient.invalidateQueries('columns');
@@ -57,11 +62,13 @@ export const useColumnList = () => {
     name,
     description,
     taskId,
+    idUser,
   }: {
     columnId: string;
     name: string;
     description: string;
     taskId: string;
+    idUser: string;
   }) =>
     setManageTaskModalInfo({
       isOpen: true,
@@ -70,7 +77,21 @@ export const useColumnList = () => {
       description,
       taskId,
       title: 'edit',
+      idUser,
     });
+
+  const onSuccessRemoveMember = () => {
+    useCustomToast({
+      text: 'Member successfully removed',
+      type: 'success',
+    });
+    queryClient.invalidateQueries('columns');
+    queryClient.invalidateQueries('users');
+  };
+
+  const { mutate: mutateRemoveMember } = useRemoveMember(onSuccessRemoveMember);
+
+  const removeMemberHandler = (userId: string) => mutateRemoveMember(userId);
 
   return {
     showModalHandler,
@@ -78,5 +99,6 @@ export const useColumnList = () => {
     editTaskHandler,
     manageTaskModalInfo,
     hideModalHandler,
+    removeMemberHandler,
   };
 };
