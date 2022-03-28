@@ -54,7 +54,7 @@ jest.mock('Hooks/useManageColumn', () => ({
   }),
 }));
 
-describe('Kanban', () => {
+describe.skip('Kanban', () => {
   it('should render 2 columns', () => {
     const column1 = screen.getByTestId('testColumn1-column');
 
