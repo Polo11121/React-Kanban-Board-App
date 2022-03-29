@@ -8,27 +8,29 @@ type TaskProps = {
   description: string;
   color: string;
   id: string;
-  idUser: string;
+  idSection: string;
   onDelete: (taskId: string) => void;
   onEdit: ({
     columnId,
     name,
     description,
     taskId,
-    idUser,
+    idMember,
+    idSection,
   }: {
     columnId: string;
     name: string;
     description: string;
     taskId: string;
-    idUser: string;
+    idMember: string[];
+    idSection: string;
   }) => void;
   columnId: string;
 };
 
 export const Task = ({
   title,
-  idUser,
+  idSection,
   description,
   color,
   id,
@@ -39,7 +41,14 @@ export const Task = ({
   const deleteTaskHandler = () => onDelete(id);
 
   const editTaskHandler = () =>
-    onEdit({ columnId, name: title, description, taskId: id, idUser });
+    onEdit({
+      columnId,
+      name: title,
+      description,
+      taskId: id,
+      idSection,
+      idMember: [],
+    });
 
   return (
     <article className={classes.task} data-testid={`${title}-task`}>

@@ -16,20 +16,19 @@ export const useGetColumns = (): useGetColumnsType => {
           name: any;
           numberOfTasks: any;
           color: any;
-          numberOfTasksPerUsers: any;
           tasks: any[];
         }) => ({
           id: column['_id'],
           color: column.color,
           name: column.name,
-          numberOfTasksPerUsers: column.numberOfTasksPerUsers,
           numberOfTasks: column.numberOfTasks,
           tasks: column.tasks.map((task) => ({
             id: task['_id'],
             name: task.name,
             description: task.description,
             column: task.column,
-            idUser: task.idUser,
+            idMember: task.idMember,
+            idSection: task.idSection,
           })),
         })
       )

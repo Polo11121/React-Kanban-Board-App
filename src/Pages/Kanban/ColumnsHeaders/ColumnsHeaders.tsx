@@ -7,14 +7,12 @@ type ColumnsHeadersType = {
     id,
     name,
     numberOfTasks,
-    numberOfTasksPerMember,
     color,
     tasks,
   }: {
     id: string;
     name: string;
     numberOfTasks: number;
-    numberOfTasksPerMember: number;
     color: string;
     tasks: TaskType[];
   }) => void;
@@ -37,19 +35,17 @@ export const ColumnsHeaders = ({
       zIndex: 4,
     }}
   >
-    {columns.map(
-      ({ name, color, id, numberOfTasks, tasks, numberOfTasksPerUsers }) => (
-        <ColumnHeader
-          numberOfTasksPerUsers={numberOfTasksPerUsers}
-          title={name}
-          color={color}
-          numberOfTasks={numberOfTasks}
-          onDelete={onDelete}
-          onEdit={onEdit}
-          id={id}
-          tasks={tasks}
-        />
-      )
-    )}
+    {columns.map(({ name, color, id, numberOfTasks, tasks }) => (
+      <ColumnHeader
+        key={id}
+        title={name}
+        color={color}
+        numberOfTasks={numberOfTasks}
+        onDelete={onDelete}
+        onEdit={onEdit}
+        id={id}
+        tasks={tasks}
+      />
+    ))}
   </div>
 );

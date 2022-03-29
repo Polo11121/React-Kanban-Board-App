@@ -12,7 +12,7 @@ beforeEach(() => {
       description="testDescription"
       columnId="testId"
       id="taskId"
-      idUser="elo"
+      idSection="elo"
       onDelete={jest.fn()}
       onEdit={jest.fn()}
     />

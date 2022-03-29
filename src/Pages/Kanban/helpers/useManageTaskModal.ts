@@ -1,10 +1,10 @@
+import { useGetSections } from 'Hooks/useGetSections';
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useCustomToast } from 'shared/helpers/useCustomToast';
 import { useQueryClient } from 'react-query';
 import { TaskModalInfoType } from 'shared/types/Kanban';
 import { useManageColumn } from 'Hooks/useManageColumn';
 import { useGetColumns } from 'Hooks/useGetColumns';
-import { useGetUsers } from 'Hooks/useGetUsers';
 
 type UseManageTaskModalProps = {
   onClose: () => void;
@@ -26,7 +26,7 @@ export const useManageTaskModal = ({
   });
   const { name, description } = inputValues;
   const { columns } = useGetColumns();
-  const { users } = useGetUsers();
+  const { sections } = useGetSections();
 
   const changeNameHandler = (event: ChangeEvent<HTMLInputElement>) => {
     setIsValuesTouched((prevValues) => ({
@@ -52,7 +52,6 @@ export const useManageTaskModal = ({
 
   const onSuccess = () => {
     const column = columns.find(({ id }) => id === modalInfo.columnId);
-    const userName = users.find(({ id }) => id === modalInfo.idUser)?.name;
     queryClient.invalidateQueries('columns');
     useCustomToast({
       text: `Task successfully ${modalInfo.title}ed`,
@@ -69,15 +68,28 @@ export const useManageTaskModal = ({
         type: 'error',
         autoClose: 2500,
       });
-    } else if (
-      column &&
-      column?.tasks.filter(({ idUser }) => idUser === modalInfo.idUser)
-        .length >= column?.numberOfTasksPerUsers &&
-      column?.numberOfTasksPerUsers &&
-      userName !== 'Unassigned'
-    ) {
+    }
+
+    const sectionTaskLimit = sections.find(
+      ({ id }) => id === modalInfo.idSection
+    )?.taskLimit;
+
+    const sectionName = sections.find(
+      ({ id }) => id === modalInfo.idSection
+    )?.name;
+
+    const sectionTasks = columns.reduce(
+      (sum, columnn) =>
+        sum +
+        columnn.tasks.filter(
+          ({ idSection }) => idSection === modalInfo.idSection
+        ).length,
+      0
+    );
+
+    if (column && sectionTaskLimit && sectionTasks >= sectionTaskLimit) {
       useCustomToast({
-        text: `${userName} exceeded maximum  number of tasks allowed in ${column.name} column`,
+        text: `Maximum number of tasks allowed in ${sectionName} section has been reached`,
         type: 'error',
         autoClose: 2500,
       });
@@ -113,7 +125,8 @@ export const useManageTaskModal = ({
             name: name.trim(),
             description: description.trim(),
             column: modalInfo.columnId,
-            idUser: modalInfo.idUser,
+            idMember: ['624305f531cea3da70a37245'],
+            idSection: modalInfo.idSection,
           },
           endpoint: `tasks`,
         })
@@ -123,7 +136,8 @@ export const useManageTaskModal = ({
             name: name.trim(),
             description: description.trim(),
             column: modalInfo.columnId,
-            idUser: modalInfo.idUser,
+            idMember: ['624305f531cea3da70a37245'],
+            idSection: modalInfo.idSection,
           },
           endpoint: `tasks/${modalInfo.taskId}`,
         });

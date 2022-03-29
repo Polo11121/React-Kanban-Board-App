@@ -4,7 +4,7 @@ import { useGetColumns } from 'Hooks/useGetColumns';
 import { useManageColumn } from 'Hooks/useManageColumn';
 import { TaskType } from 'shared/types/Kanban';
 import { useCustomToast } from 'shared/helpers/useCustomToast';
-import { useGetUsers } from 'Hooks/useGetUsers';
+import { useGetSections } from 'Hooks/useGetSections';
 
 export const useKanban = () => {
   const queryClient = useQueryClient();
@@ -14,12 +14,11 @@ export const useKanban = () => {
     tasks: [] as unknown as TaskType[],
     color: '',
     numberOfTasks: 0,
-    numberOfTasksPerMember: 0,
     id: '',
     title: 'add',
   });
   const { columns, isLoading: isColumnsLoading } = useGetColumns();
-  const { users, isLoading: isUsersLoading } = useGetUsers();
+  const { sections, isLoading: isSectionsLoading } = useGetSections();
 
   const hideModalHandler = () =>
     setManageColumnModalInfo({
@@ -28,7 +27,6 @@ export const useKanban = () => {
       tasks: [] as unknown as TaskType[],
       color: '',
       numberOfTasks: 0,
-      numberOfTasksPerMember: 0,
       id: '',
       title: 'add',
     });
@@ -43,7 +41,6 @@ export const useKanban = () => {
       tasks: [] as unknown as TaskType[],
       color: '',
       numberOfTasks: 0,
-      numberOfTasksPerMember: 0,
       id: '',
       title: 'add',
     });
@@ -61,14 +58,12 @@ export const useKanban = () => {
     name,
     numberOfTasks,
     color,
-    numberOfTasksPerMember,
     tasks,
   }: {
     id: string;
     name: string;
-    numberOfTasks: number;
-    numberOfTasksPerMember: number;
     color: string;
+    numberOfTasks: number;
     tasks: TaskType[];
   }) =>
     setManageColumnModalInfo({
@@ -77,7 +72,6 @@ export const useKanban = () => {
       tasks,
       color,
       numberOfTasks,
-      numberOfTasksPerMember,
       id,
       title: 'edit',
     });
@@ -89,7 +83,7 @@ export const useKanban = () => {
     hideModalHandler,
     columns,
     manageColumnModalInfo,
-    users,
-    isLoading: isUsersLoading || isColumnsLoading,
+    sections: [...sections.slice(1), ...sections.slice(0, 1)],
+    isLoading: isSectionsLoading || isColumnsLoading,
   };
 };

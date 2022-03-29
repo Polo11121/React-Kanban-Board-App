@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import { AddMemberModal } from 'Components';
+import { AddSectionModal } from 'Components';
 import AddIcon from '@mui/icons-material/Add';
 import Logo from 'assets/chadban.png';
 import classes from './Header.module.scss';
 
 export const Header = () => {
-  const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false);
+  const [isAddSectionModalOpen, setIsAddSectionModalOpen] = useState(false);
 
-  const openModalHandler = () => setIsAddMemberModalOpen(true);
+  const openModalHandler = () => setIsAddSectionModalOpen(true);
 
-  const closeModalHandler = () => setIsAddMemberModalOpen(false);
+  const closeModalHandler = () => setIsAddSectionModalOpen(false);
 
   return (
     <header className={classes.header} data-testid="header">
@@ -26,9 +26,9 @@ export const Header = () => {
         type="button"
       >
         <AddIcon />
-        Add Member
+        Add Section
       </button>
-      {isAddMemberModalOpen && <AddMemberModal onClose={closeModalHandler} />}
+      {isAddSectionModalOpen && <AddSectionModal onClose={closeModalHandler} />}
     </header>
   );
 };

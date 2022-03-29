@@ -17,7 +17,7 @@ const Kanban = () => {
     columns,
     manageColumnModalInfo,
     isLoading,
-    users,
+    sections,
   } = useKanban();
 
   const { moveTask, sourceColumnId, destinationColumnId } = useMoveTask();
@@ -32,7 +32,7 @@ const Kanban = () => {
     const task = columns
       .find(({ id }) => id === source.droppableId.split(':')[0])
       ?.tasks.filter(
-        ({ idUser }) => idUser === source.droppableId.split(':')[1]
+        ({ idSection }) => idSection === source.droppableId.split(':')[1]
       )[source.index];
     if (task && destination) {
       moveTask({
@@ -64,15 +64,14 @@ const Kanban = () => {
               onEdit={editColumnHandler}
             />
             <DragDropContext onDragEnd={handleMoveTask}>
-              {users
-                .sort((userA, userB) =>
-                  userA.name === 'Unassigned' || userB.name === 'Unassigned'
-                    ? -1
-                    : userA.name.localeCompare(userB.name)
-                )
-                .map((user) => (
-                  <ColumnsList key={user.id} user={user} columns={columns} />
-                ))}
+              {sections.map((section) => (
+                <ColumnsList
+                  isSections={sections.length > 1}
+                  key={section.id}
+                  section={section}
+                  columns={columns}
+                />
+              ))}
             </DragDropContext>
           </div>
           <button
