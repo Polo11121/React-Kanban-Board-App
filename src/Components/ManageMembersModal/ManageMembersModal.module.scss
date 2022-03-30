@@ -1,4 +1,4 @@
-.manage-task-modal {
+.members-modal {
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -12,14 +12,10 @@
 
   &__title {
     color: #34495e;
-    font-family: 'Montserrat', sans-serif;
     font-size: 2rem;
     font-weight: 800;
+    margin-top: 1rem;
+    text-align: center;
     text-transform: uppercase;
-  }
-
-  &__select {
-    margin-bottom: 1rem;
-    width: 80%;
   }
 }

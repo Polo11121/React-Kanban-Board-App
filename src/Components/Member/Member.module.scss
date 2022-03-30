@@ -1,0 +1,12 @@
+.member {
+  align-items: center;
+  color: #34495e;
+  display: flex;
+  flex-direction: row;
+  width: 222.4px;
+
+  &__name {
+    font-size: 1.5rem;
+    margin-left: 0.5rem;
+  }
+}

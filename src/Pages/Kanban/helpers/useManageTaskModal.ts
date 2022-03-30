@@ -1,10 +1,11 @@
+import { useGetMembers } from 'Hooks/useGetMembers';
+import { useGetSections } from 'Hooks/useGetSections';
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useCustomToast } from 'shared/helpers/useCustomToast';
 import { useQueryClient } from 'react-query';
 import { TaskModalInfoType } from 'shared/types/Kanban';
 import { useManageColumn } from 'Hooks/useManageColumn';
 import { useGetColumns } from 'Hooks/useGetColumns';
-import { useGetUsers } from 'Hooks/useGetUsers';
 
 type UseManageTaskModalProps = {
   onClose: () => void;
@@ -23,10 +24,12 @@ export const useManageTaskModal = ({
   const [inputValues, setInputValues] = useState({
     name: '',
     description: '',
+    members: [] as { value: string; label: string; avatarSrc: string }[],
   });
-  const { name, description } = inputValues;
+  const { name, description, members: chosenMembers } = inputValues;
   const { columns } = useGetColumns();
-  const { users } = useGetUsers();
+  const { sections } = useGetSections();
+  const { members } = useGetMembers();
 
   const changeNameHandler = (event: ChangeEvent<HTMLInputElement>) => {
     setIsValuesTouched((prevValues) => ({
@@ -50,9 +53,15 @@ export const useManageTaskModal = ({
     }));
   };
 
+  const changeMembersHandler = (event: any) => {
+    setInputValues((prevValues) => ({
+      ...prevValues,
+      members: event,
+    }));
+  };
+
   const onSuccess = () => {
     const column = columns.find(({ id }) => id === modalInfo.columnId);
-    const userName = users.find(({ id }) => id === modalInfo.idUser)?.name;
     queryClient.invalidateQueries('columns');
     useCustomToast({
       text: `Task successfully ${modalInfo.title}ed`,
@@ -60,6 +69,7 @@ export const useManageTaskModal = ({
     });
 
     if (
+      modalInfo.title === 'add' &&
       column &&
       column?.tasks.length >= column?.numberOfTasks &&
       column.numberOfTasks
@@ -69,15 +79,33 @@ export const useManageTaskModal = ({
         type: 'error',
         autoClose: 2500,
       });
-    } else if (
+    }
+
+    const sectionTaskLimit = sections.find(
+      ({ id }) => id === modalInfo.idSection
+    )?.taskLimit;
+
+    const sectionName = sections.find(
+      ({ id }) => id === modalInfo.idSection
+    )?.name;
+
+    const sectionTasks = columns.reduce(
+      (sum, columnn) =>
+        sum +
+        columnn.tasks.filter(
+          ({ idSection }) => idSection === modalInfo.idSection
+        ).length,
+      0
+    );
+
+    if (
+      modalInfo.title === 'add' &&
       column &&
-      column?.tasks.filter(({ idUser }) => idUser === modalInfo.idUser)
-        .length >= column?.numberOfTasksPerUsers &&
-      column?.numberOfTasksPerUsers &&
-      userName !== 'Unassigned'
+      sectionTaskLimit &&
+      sectionTasks >= sectionTaskLimit
     ) {
       useCustomToast({
-        text: `${userName} exceeded maximum  number of tasks allowed in ${column.name} column`,
+        text: `Maximum number of tasks allowed in ${sectionName} section has been reached`,
         type: 'error',
         autoClose: 2500,
       });
@@ -90,6 +118,13 @@ export const useManageTaskModal = ({
     setInputValues({
       name: modalInfo.name,
       description: modalInfo.description,
+      members: members
+        .filter(({ id }) => modalInfo.idMember.includes(id))
+        .map(({ id, name: memberName, avatarSrc }) => ({
+          value: id,
+          label: memberName,
+          avatarSrc,
+        })),
     });
   }, []);
 
@@ -99,7 +134,11 @@ export const useManageTaskModal = ({
   const haveValuesChanged =
     modalInfo.title === 'edit'
       ? name.trim() !== modalInfo.name ||
-        description.trim() !== modalInfo.description
+        description.trim() !== modalInfo.description ||
+        chosenMembers
+          .map(({ value }) => value)
+          .sort()
+          .join(',') !== modalInfo.idMember.sort().join(',')
       : isValuesTouched.name && isValuesTouched.description;
 
   const { mutate, isLoading } = useManageColumn(onSuccess);
@@ -113,7 +152,8 @@ export const useManageTaskModal = ({
             name: name.trim(),
             description: description.trim(),
             column: modalInfo.columnId,
-            idUser: modalInfo.idUser,
+            idMember: inputValues.members.map(({ value }) => value),
+            idSection: modalInfo.idSection,
           },
           endpoint: `tasks`,
         })
@@ -123,7 +163,8 @@ export const useManageTaskModal = ({
             name: name.trim(),
             description: description.trim(),
             column: modalInfo.columnId,
-            idUser: modalInfo.idUser,
+            idMember: inputValues.members.map(({ value }) => value),
+            idSection: modalInfo.idSection,
           },
           endpoint: `tasks/${modalInfo.taskId}`,
         });
@@ -139,5 +180,8 @@ export const useManageTaskModal = ({
     haveValuesChanged,
     name,
     description,
+    members,
+    chosenMembers,
+    changeMembersHandler,
   };
 };

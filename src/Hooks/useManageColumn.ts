@@ -5,14 +5,14 @@ type payloadTaskType = {
   name: string;
   description: string;
   column: string;
-  idUser: string;
+  idMember: string[];
+  idSection: string;
 };
 
 type payloadColumnType = {
   color: string;
   name: string;
   numberOfTasks: number;
-  numberOfTasksPerUsers: number;
 };
 
 type useManageTaskProps = {

@@ -1,5 +1,5 @@
 import { useGetColumns } from 'Hooks/useGetColumns';
-import { useGetUsers } from 'Hooks/useGetUsers';
+import { useGetSections } from 'Hooks/useGetSections';
 import { useManageColumn } from 'Hooks/useManageColumn';
 import { useState } from 'react';
 import { useQueryClient } from 'react-query';
@@ -20,7 +20,7 @@ export const useMoveTask = () => {
   const queryClient = useQueryClient();
   const { mutateAsync } = useManageColumn(() => null);
   const { columns } = useGetColumns();
-  const { users } = useGetUsers();
+  const { sections } = useGetSections();
 
   const moveTask = ({
     task,
@@ -28,7 +28,7 @@ export const useMoveTask = () => {
     destinationColumnId,
   }: UseMoveTaskType) => {
     const columnId = destinationColumnId.split(':')[0];
-    const userID = destinationColumnId.split(':')[1];
+    const sectionID = destinationColumnId.split(':')[1];
 
     setMoveTaskInfo({
       sourceColumnId,
@@ -44,7 +44,8 @@ export const useMoveTask = () => {
           name: task.name,
           description: task.description,
           column: columnId,
-          idUser: userID,
+          idSection: sectionID,
+          idMember: task.idMember,
         },
         endpoint: `tasks`,
       }).then(() => {
@@ -61,19 +62,24 @@ export const useMoveTask = () => {
               type: 'error',
               autoClose: 2500,
             });
-          } else if (
-            column &&
-            column?.tasks.filter(({ idUser }) => idUser === userID).length >=
-              column?.numberOfTasksPerUsers &&
-            column?.numberOfTasksPerUsers &&
-            users.find(({ id }) => id === userID)?.name !== 'Unassigned'
-          ) {
+          }
+          const sectionTaskLimit = sections.find(
+            ({ id }) => id === sectionID
+          )?.taskLimit;
+
+          const sectionName = sections.find(({ id }) => id === sectionID)?.name;
+
+          const sectionTasks = columns.reduce(
+            (sum, columnn) =>
+              sum +
+              columnn.tasks.filter(({ idSection }) => idSection === sectionID)
+                .length,
+            0
+          );
+
+          if (column && sectionTaskLimit && sectionTasks >= sectionTaskLimit) {
             useCustomToast({
-              text: `${
-                users.find(({ id }) => id === userID)?.name
-              } exceeded maximum  number of tasks allowed in ${
-                column.name
-              } column`,
+              text: `Maximum number of tasks allowed in ${sectionName} section has been reached`,
               type: 'error',
               autoClose: 2500,
             });

@@ -2,6 +2,8 @@ import { Modal } from 'Components';
 import { useManageTaskModal } from 'Pages/Kanban/helpers/useManageTaskModal';
 import { TaskModalInfoType } from 'shared/types/Kanban';
 import { Button, TextField } from '@mui/material';
+import { Member } from 'Components/Member/Member';
+import Select from 'react-select';
 import CloseIcon from '@mui/icons-material/Close';
 import classes from './ManageTaskModal.module.scss';
 
@@ -24,6 +26,9 @@ export const ManageTaskModal = ({
     haveValuesChanged,
     name,
     description,
+    chosenMembers,
+    members,
+    changeMembersHandler,
   } = useManageTaskModal({ onClose, modalInfo });
 
   const isButtonDisabled =
@@ -72,6 +77,34 @@ export const ManageTaskModal = ({
             focused
           />
         </div>
+        <Select
+          onChange={changeMembersHandler}
+          maxMenuHeight={200}
+          placeholder="Assign members to task"
+          isMulti
+          value={chosenMembers}
+          className={classes['manage-task-modal__select']}
+          closeMenuOnSelect={false}
+          options={members
+            .sort((memberA, memberB) =>
+              memberA.name.localeCompare(memberB.name)
+            )
+            .map(({ id, name: memberName, avatarSrc }) => ({
+              value: id,
+              label: memberName,
+              avatarSrc,
+            }))}
+          // eslint-disable-next-line react/no-unstable-nested-components
+          formatOptionLabel={({ label, avatarSrc }) => (
+            <Member
+              style={{ width: 'fit-content' }}
+              size="30"
+              fontSize="1rem"
+              name={label}
+              src={avatarSrc}
+            />
+          )}
+        />
         <Button
           disabled={isButtonDisabled}
           type="submit"

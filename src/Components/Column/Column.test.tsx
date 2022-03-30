@@ -1,5 +1,4 @@
-import { Column } from 'Components';
-import { render, screen } from 'shared/helpers/test-utils';
+import { screen } from 'shared/helpers/test-utils';
 
 describe.skip('Column', () => {
   it('should render Column component', () => {

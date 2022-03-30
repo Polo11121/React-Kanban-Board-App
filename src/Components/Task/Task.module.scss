@@ -4,8 +4,8 @@
   display: column;
   height: 13rem;
   margin: 0.8rem 0.3rem;
-  width: 13rem;
   transform: none;
+  width: 13rem;
 
   &__header {
     align-items: center;
@@ -22,12 +22,23 @@
 
   &__content {
     color: #000;
+
+    height: calc(100% - 48.8px);
     margin: 0.5rem;
     overflow-wrap: break-word;
+    position: relative;
   }
 
   &__icons {
     position: absolute;
     right: 5px;
+  }
+
+  &__members {
+    align-items: center;
+    bottom: 0;
+    display: flex;
+    position: absolute;
+    right: 0;
   }
 }

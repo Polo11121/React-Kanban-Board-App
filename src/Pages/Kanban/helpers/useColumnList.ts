@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useCustomToast } from 'shared/helpers/useCustomToast';
 import { useManageColumn } from 'Hooks/useManageColumn';
-import { useRemoveMember } from 'Hooks/useRemoveMember';
+import { useRemoveSection } from 'Hooks/useRemoveSection';
 import { useQueryClient } from 'react-query';
 
 export const useColumnList = () => {
@@ -13,7 +13,8 @@ export const useColumnList = () => {
     description: '',
     taskId: '',
     title: 'add',
-    idUser: '',
+    idSection: '',
+    idMember: [] as string[],
   });
 
   const hideModalHandler = () =>
@@ -24,15 +25,16 @@ export const useColumnList = () => {
       description: '',
       taskId: '',
       title: 'add',
-      idUser: '',
+      idSection: '',
+      idMember: [],
     });
 
-  const showModalHandler = (id: string, idUser: string) =>
+  const showModalHandler = (id: string, idSection: string) =>
     setManageTaskModalInfo((prevInfo) => ({
       ...prevInfo,
       isOpen: true,
       columnId: id,
-      idUser,
+      idSection,
     }));
 
   const onSuccess = () => {
@@ -43,7 +45,8 @@ export const useColumnList = () => {
       description: '',
       taskId: '',
       title: 'add',
-      idUser: '',
+      idSection: '',
+      idMember: [],
     });
     useCustomToast({ text: 'Task successfully deleted', type: 'success' });
     queryClient.invalidateQueries('columns');
@@ -62,13 +65,15 @@ export const useColumnList = () => {
     name,
     description,
     taskId,
-    idUser,
+    idSection,
+    idMember,
   }: {
     columnId: string;
     name: string;
     description: string;
     taskId: string;
-    idUser: string;
+    idSection: string;
+    idMember: string[];
   }) =>
     setManageTaskModalInfo({
       isOpen: true,
@@ -77,21 +82,25 @@ export const useColumnList = () => {
       description,
       taskId,
       title: 'edit',
-      idUser,
+      idSection,
+      idMember,
     });
 
-  const onSuccessRemoveMember = () => {
+  const onSuccessRemoveSection = () => {
     useCustomToast({
-      text: 'Member successfully removed',
+      text: `Section successfully removed`,
       type: 'success',
     });
     queryClient.invalidateQueries('columns');
-    queryClient.invalidateQueries('users');
+    queryClient.invalidateQueries('sections');
   };
 
-  const { mutate: mutateRemoveMember } = useRemoveMember(onSuccessRemoveMember);
+  const { mutate: mutateRemoveSection } = useRemoveSection(
+    onSuccessRemoveSection
+  );
 
-  const removeMemberHandler = (userId: string) => mutateRemoveMember(userId);
+  const removeSectionHandler = (sectionId: string) =>
+    mutateRemoveSection(sectionId);
 
   return {
     showModalHandler,
@@ -99,6 +108,6 @@ export const useColumnList = () => {
     editTaskHandler,
     manageTaskModalInfo,
     hideModalHandler,
-    removeMemberHandler,
+    removeSectionHandler,
   };
 };

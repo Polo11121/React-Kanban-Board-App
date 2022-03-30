@@ -5,21 +5,22 @@ import { TaskType } from 'shared/types/Kanban';
 type TaskListProps = {
   tasks: TaskType[];
   color: string;
-
   onDelete: (taskId: string) => void;
-  idUser: string;
+  idSection: string;
   onEdit: ({
     columnId,
     name,
     description,
     taskId,
-    idUser,
+    idMember,
+    idSection,
   }: {
     columnId: string;
     name: string;
     description: string;
     taskId: string;
-    idUser: string;
+    idMember: string[];
+    idSection: string;
   }) => void;
   columnId: string;
 };
@@ -30,13 +31,13 @@ export const TasksList = ({
   color,
   onDelete,
   onEdit,
-  idUser,
+  idSection,
 }: TaskListProps) => (
   <>
-    {tasks?.map(({ id, name, description }, index) => (
+    {tasks?.map(({ id, name, description, idMember }, index) => (
       <Draggable
         key={id}
-        draggableId={`${columnId}-${idUser}-${id}`}
+        draggableId={`${columnId}-${idSection}-${id}`}
         index={index}
       >
         {(draggableProvided) => (
@@ -46,7 +47,8 @@ export const TasksList = ({
             ref={draggableProvided.innerRef}
           >
             <Task
-              idUser={idUser}
+              members={idMember}
+              idSection={idSection}
               onEdit={onEdit}
               columnId={columnId}
               onDelete={onDelete}

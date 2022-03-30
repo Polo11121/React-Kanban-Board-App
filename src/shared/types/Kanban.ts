@@ -3,7 +3,8 @@ export type TaskType = {
   name: string;
   description: string;
   column: string;
-  idUser: string;
+  idMember: string[];
+  idSection: string;
 };
 
 export type ColumnType = {
@@ -12,14 +13,12 @@ export type ColumnType = {
   name: string;
   numberOfTasks: number;
   tasks: TaskType[];
-  numberOfTasksPerUsers: number;
 };
 
 export type ColumnModalInfoType = {
   isOpen: boolean;
   name: string;
   numberOfTasks: number;
-  numberOfTasksPerMember: number;
   color: string;
   tasks: TaskType[];
   id: string;
@@ -28,10 +27,11 @@ export type ColumnModalInfoType = {
 
 export type TaskModalInfoType = {
   isOpen: boolean;
+  columnId: string;
   name: string;
   description: string;
-  columnId: string;
   taskId: string;
   title: string;
-  idUser: string;
+  idSection: string;
+  idMember: string[];
 };
