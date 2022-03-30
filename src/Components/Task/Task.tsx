@@ -1,6 +1,11 @@
 import { trimText } from 'shared/helpers/formatters';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import PersonIcon from '@mui/icons-material/Person';
+import { Tooltip } from '@mui/material';
+import { Member } from 'Components/Member/Member';
+import { useGetMembers } from 'Hooks/useGetMembers';
+import GroupIcon from '@mui/icons-material/Group';
 import classes from './Task.module.scss';
 
 type TaskProps = {
@@ -9,6 +14,7 @@ type TaskProps = {
   color: string;
   id: string;
   idSection: string;
+  members: string[];
   onDelete: (taskId: string) => void;
   onEdit: ({
     columnId,
@@ -34,6 +40,7 @@ export const Task = ({
   description,
   color,
   id,
+  members,
   columnId,
   onDelete,
   onEdit,
@@ -47,8 +54,14 @@ export const Task = ({
       description,
       taskId: id,
       idSection,
-      idMember: [],
+      idMember: members,
     });
+
+  const { members: allMembers } = useGetMembers();
+
+  const taskMembers = allMembers.filter(({ id: memberId }) =>
+    members.includes(memberId)
+  );
 
   return (
     <article className={classes.task} data-testid={`${title}-task`}>
@@ -74,6 +87,37 @@ export const Task = ({
       </div>
       <div className={classes['task__content']}>
         {trimText(description, 125)}
+        <Tooltip
+          placement="bottom"
+          title={taskMembers
+            .sort((memberA, memberB) =>
+              memberA.name.localeCompare(memberB.name)
+            )
+            .map(({ id: memberId, name, avatarSrc }) => (
+              <Member
+                key={memberId}
+                style={{
+                  width: 'fit-content',
+                  color: 'white',
+                  margin: '0.3rem',
+                }}
+                size="30"
+                fontSize="1rem"
+                name={name}
+                src={avatarSrc}
+              />
+            ))}
+        >
+          <div className={classes['task__members']}>
+            {members.length === 1 && <PersonIcon />}
+            {members.length > 1 && (
+              <>
+                {members.length}
+                <GroupIcon />
+              </>
+            )}
+          </div>
+        </Tooltip>
       </div>
     </article>
   );

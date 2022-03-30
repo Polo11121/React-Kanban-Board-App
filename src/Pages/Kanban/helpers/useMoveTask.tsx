@@ -45,7 +45,7 @@ export const useMoveTask = () => {
           description: task.description,
           column: columnId,
           idSection: sectionID,
-          idMember: [],
+          idMember: task.idMember,
         },
         endpoint: `tasks`,
       }).then(() => {

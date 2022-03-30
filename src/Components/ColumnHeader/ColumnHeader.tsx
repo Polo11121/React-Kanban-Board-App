@@ -5,6 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ReportIcon from '@mui/icons-material/Report';
 import AllInclusiveIcon from '@mui/icons-material/AllInclusive';
 import { Tooltip } from '@mui/material';
+
 import classes from './ColumnHeader.module.scss';
 
 type ColumnHeaderProps = {

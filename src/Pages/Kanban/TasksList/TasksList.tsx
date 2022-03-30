@@ -34,7 +34,7 @@ export const TasksList = ({
   idSection,
 }: TaskListProps) => (
   <>
-    {tasks?.map(({ id, name, description }, index) => (
+    {tasks?.map(({ id, name, description, idMember }, index) => (
       <Draggable
         key={id}
         draggableId={`${columnId}-${idSection}-${id}`}
@@ -47,6 +47,7 @@ export const TasksList = ({
             ref={draggableProvided.innerRef}
           >
             <Task
+              members={idMember}
               idSection={idSection}
               onEdit={onEdit}
               columnId={columnId}

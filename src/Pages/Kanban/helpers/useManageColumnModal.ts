@@ -1,9 +1,11 @@
+import { useGetColumnsOrder } from 'Hooks/useGetColumnsOrder';
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useManageColumn } from 'Hooks/useManageColumn';
 import { useCustomToast } from 'shared/helpers/useCustomToast';
 import { ColorResult } from 'react-color';
 import { useQueryClient } from 'react-query';
 import { ColumnModalInfoType } from 'shared/types/Kanban';
+import { useChangeColumnsOrder } from 'Hooks/useChangeColumnsOrder';
 
 type useManageColumnModalProps = {
   onClose: () => void;
@@ -82,12 +84,16 @@ export const useManageColumnModal = ({
         color !== modalInfo.color
       : isValuesTouched.name && isValuesTouched.numberOfTasks;
 
-  const { mutate, isLoading } = useManageColumn(onSuccess);
+  const { mutate, isLoading, mutateAsync } = useManageColumn(onSuccess);
+
+  const { columnsOrder } = useGetColumnsOrder();
+
+  const { mutateAsync: mutateColumnsOrder } = useChangeColumnsOrder(() => null);
 
   const manageColumnHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     modalInfo.title === 'add'
-      ? mutate({
+      ? mutateAsync({
           method: 'POST',
           payload: {
             color,
@@ -95,6 +101,10 @@ export const useManageColumnModal = ({
             numberOfTasks: +numberOfTasks,
           },
           endpoint: 'columns',
+        }).then((resp) => {
+          mutateColumnsOrder({
+            columnsOrder: [...columnsOrder, resp.data.data.id],
+          }).then(() => queryClient.invalidateQueries('columnsOrder'));
         })
       : mutate({
           method: 'PUT',

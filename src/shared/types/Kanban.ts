@@ -3,7 +3,7 @@ export type TaskType = {
   name: string;
   description: string;
   column: string;
-  idMember: string;
+  idMember: string[];
   idSection: string;
 };
 

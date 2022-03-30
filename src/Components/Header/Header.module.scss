@@ -5,7 +5,11 @@
   justify-content: space-between;
   padding: 0 2rem;
 
-  &__add-member-button {
+  &__buttons {
+    display: flex;
+  }
+
+  &__button {
     align-items: center;
     background-color: #e7e6e6;
     border: solid transparent;
@@ -15,12 +19,16 @@
     flex-direction: row;
     height: 2.5rem;
     justify-content: center;
+    min-width: 10rem;
     opacity: 0.9;
     transition-duration: 0.4s;
-    min-width: 10rem;
 
     &:hover {
       background-color: #ccc7c7;
+    }
+
+    &:first-of-type {
+      margin-right: 1rem;
     }
   }
 }

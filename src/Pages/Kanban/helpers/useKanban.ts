@@ -2,9 +2,12 @@ import { useState } from 'react';
 import { useQueryClient } from 'react-query';
 import { useGetColumns } from 'Hooks/useGetColumns';
 import { useManageColumn } from 'Hooks/useManageColumn';
-import { TaskType } from 'shared/types/Kanban';
+import { ColumnType, TaskType } from 'shared/types/Kanban';
 import { useCustomToast } from 'shared/helpers/useCustomToast';
 import { useGetSections } from 'Hooks/useGetSections';
+import { useGetMembers } from 'Hooks/useGetMembers';
+import { useGetColumnsOrder } from 'Hooks/useGetColumnsOrder';
+import { useChangeColumnsOrder } from 'Hooks/useChangeColumnsOrder';
 
 export const useKanban = () => {
   const queryClient = useQueryClient();
@@ -19,6 +22,8 @@ export const useKanban = () => {
   });
   const { columns, isLoading: isColumnsLoading } = useGetColumns();
   const { sections, isLoading: isSectionsLoading } = useGetSections();
+  const { isLoading: isMembersLoading } = useGetMembers();
+  const { isLoading, columnsOrder } = useGetColumnsOrder();
 
   const hideModalHandler = () =>
     setManageColumnModalInfo({
@@ -48,10 +53,20 @@ export const useKanban = () => {
     queryClient.invalidateQueries('columns');
   };
 
-  const { mutate } = useManageColumn(onSuccess);
+  const { mutateAsync } = useManageColumn(onSuccess);
+
+  const { mutateAsync: mutateColumnsOrder } = useChangeColumnsOrder(() => null);
 
   const deleteColumnHandler = (id: string) =>
-    mutate({ method: 'DELETE', endpoint: `columns/${id}` });
+    mutateAsync({ method: 'DELETE', endpoint: `columns/${id}` }).then(() =>
+      mutateColumnsOrder({
+        columnsOrder: columnsOrder.filter((columnId) => columnId !== id),
+      }).then(() => {
+        queryClient
+          .invalidateQueries('columnsOrder')
+          .then(() => queryClient.invalidateQueries('columns'));
+      })
+    );
 
   const editColumnHandler = ({
     id,
@@ -81,9 +96,13 @@ export const useKanban = () => {
     deleteColumnHandler,
     showModalHandler,
     hideModalHandler,
-    columns,
+    columns: columnsOrder.map((columnId) =>
+      columns.find(({ id }) => columnId === id)
+    ) as ColumnType[],
     manageColumnModalInfo,
     sections: [...sections.slice(1), ...sections.slice(0, 1)],
-    isLoading: isSectionsLoading || isColumnsLoading,
+    isLoading:
+      isSectionsLoading || isColumnsLoading || isMembersLoading || isLoading,
+    columnsOrder,
   };
 };

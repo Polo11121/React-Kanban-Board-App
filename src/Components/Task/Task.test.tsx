@@ -7,6 +7,7 @@ beforeEach(() => {
 
   render(
     <Task
+      members={[]}
       color="#fff"
       title="testTitle"
       description="testDescription"

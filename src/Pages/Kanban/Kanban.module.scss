@@ -1,9 +1,9 @@
 .kanban {
   display: flex;
   flex-direction: row;
-  min-height: calc(100vh - 112px);
   height: fit-content;
   justify-content: flex-start;
+  min-height: calc(100vh - 112px);
   overflow: auto;
   padding: 1rem;
   width: calc(100% - 2rem);
@@ -20,7 +20,6 @@
   }
 
   &__add-column-button {
-    margin: 0.5rem 1rem 0;
     align-items: center;
     background-color: #e7e6e6;
     border: solid transparent;
@@ -30,22 +29,23 @@
     flex-direction: row;
     height: 2.5rem;
     justify-content: center;
+    margin: 0.5rem 1rem 0;
+    min-width: 10rem;
     opacity: 0.5;
     transition-duration: 0.4s;
-    min-width: 10rem;
 
     &:hover {
       background-color: #ccc7c7;
     }
   }
+
+  ::-webkit-scrollbar:vertical {
+    display: none;
+  }
 }
 
 ::-webkit-scrollbar {
   width: 15px;
-}
-
-::-webkit-scrollbar:vertical {
-  display: none;
 }
 
 ::-webkit-scrollbar-track {

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TasksList } from 'Pages/Kanban/TasksList/TasksList';
 import { ManageTaskModal } from 'Pages/Kanban/ManageTaskModal/ManageTaskModal';
 import { useColumnList } from 'Pages/Kanban/helpers/useColumnList';
@@ -60,6 +60,13 @@ export const ColumnsList = ({
     }
   };
 
+  useEffect(() => {
+    if (!isSections) {
+      localStorage.setItem(section.name, 'open');
+      setIsOpen(true);
+    }
+  }, [isSections]);
+
   return (
     <div className={classes['column-list__content']}>
       {isSections && (
@@ -73,7 +80,7 @@ export const ColumnsList = ({
         />
       )}
       <div style={{ display: `${isOpen ? 'flex' : 'none'}` }}>
-        {columns.map(({ name, color, id, tasks, numberOfTasks }) => (
+        {columns?.map(({ name, color, id, tasks, numberOfTasks }) => (
           <Droppable key={id} droppableId={`${id}:${section.id}`}>
             {(droppableProvided) => (
               <div
