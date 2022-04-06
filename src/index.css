@@ -22,7 +22,10 @@ code {
   height: 100%;
 }
 
-.css-sxh3gq-MuiAvatar-root-MuiAvatarGroup-avatar {
+.MuiAvatar-root,
+.MuiAvatar-circular,
+.MuiAvatar-colorDefault,
+.MuiAvatarGroup-avatar {
   height: 30px !important;
   width: 30px !important;
   align-content: flex-start !important;
