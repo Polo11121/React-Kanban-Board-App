@@ -73,13 +73,20 @@ export const ManageTaskModal = ({
             color="info"
             multiline
             fullWidth
-            rows={8}
+            rows={5}
             focused
           />
         </div>
         <Select
           onChange={changeMembersHandler}
           maxMenuHeight={200}
+          styles={{
+            valueContainer: (provided) => ({
+              ...provided,
+              maxHeight: '85px',
+              overflow: 'auto',
+            }),
+          }}
           placeholder="Assign members to task"
           isMulti
           value={chosenMembers}
