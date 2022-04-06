@@ -70,8 +70,8 @@ export const ColumnHeader = ({
     >
       <div className={classes['column-header__info']}>
         <div style={{ cursor: 'pointer' }}>
-          <Tooltip arrow title={`${title.length > 10 ? title : ''}`}>
-            <span>{trimText(title, 10)}</span>
+          <Tooltip arrow title={`${title.length > 15 ? title : ''}`}>
+            <span>{trimText(title, 15)}</span>
           </Tooltip>
         </div>
         <div

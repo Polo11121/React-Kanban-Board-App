@@ -69,8 +69,8 @@ export const Task = ({
         className={classes['task__header']}
         style={{ backgroundColor: color }}
       >
-        <Tooltip arrow title={`${title.length > 8 ? title : ''}`}>
-          <span style={{ cursor: 'pointer' }}>{trimText(title, 8)}</span>
+        <Tooltip arrow title={`${title.length > 10 ? title : ''}`}>
+          <span style={{ cursor: 'pointer' }}>{trimText(title, 10)}</span>
         </Tooltip>
         <div className={classes['task__icons']}>
           <EditIcon
