@@ -1,11 +1,11 @@
 import { trimText } from 'shared/helpers/formatters';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import PersonIcon from '@mui/icons-material/Person';
-import { Tooltip } from '@mui/material';
+import { AvatarGroup, Tooltip } from '@mui/material';
 import { Member } from 'Components/Member/Member';
 import { useGetMembers } from 'Hooks/useGetMembers';
-import GroupIcon from '@mui/icons-material/Group';
+import Avatar from 'react-avatar';
+
 import classes from './Task.module.scss';
 
 type TaskProps = {
@@ -69,7 +69,9 @@ export const Task = ({
         className={classes['task__header']}
         style={{ backgroundColor: color }}
       >
-        {trimText(title, 10)}
+        <Tooltip arrow title={`${title.length > 8 ? title : ''}`}>
+          <span style={{ cursor: 'pointer' }}>{trimText(title, 8)}</span>
+        </Tooltip>
         <div className={classes['task__icons']}>
           <EditIcon
             onClick={editTaskHandler}
@@ -86,38 +88,24 @@ export const Task = ({
         </div>
       </div>
       <div className={classes['task__content']}>
-        {trimText(description, 125)}
-        <Tooltip
-          placement="bottom"
-          title={taskMembers
+        <div style={{ flex: '1' }}>
+          {trimText(description, members.length ? 100 : 125)}
+        </div>
+        <AvatarGroup className={classes['task__avatars']} spacing={5} max={6}>
+          {taskMembers
             .sort((memberA, memberB) =>
               memberA.name.localeCompare(memberB.name)
             )
             .map(({ id: memberId, name, avatarSrc }) => (
-              <Member
+              <Avatar
                 key={memberId}
-                style={{
-                  width: 'fit-content',
-                  color: 'white',
-                  margin: '0.3rem',
-                }}
-                size="30"
-                fontSize="1rem"
                 name={name}
                 src={avatarSrc}
+                size="30"
+                round="50px"
               />
             ))}
-        >
-          <div className={classes['task__members']}>
-            {members.length === 1 && <PersonIcon />}
-            {members.length > 1 && (
-              <>
-                {members.length}
-                <GroupIcon />
-              </>
-            )}
-          </div>
-        </Tooltip>
+        </AvatarGroup>
       </div>
     </article>
   );

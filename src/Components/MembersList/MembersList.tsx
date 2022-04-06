@@ -11,7 +11,7 @@ export const MembersList = () => {
         alignItems: 'center',
         flexDirection: 'column',
         overflowY: 'auto',
-        maxHeight: '198px',
+        height: '400px',
       }}
     >
       {members

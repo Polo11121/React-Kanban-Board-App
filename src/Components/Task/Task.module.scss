@@ -9,7 +9,6 @@
 
   &__header {
     align-items: center;
-
     color: #fff;
     display: flex;
     font-family: 'Montserrat';
@@ -22,11 +21,12 @@
 
   &__content {
     color: #000;
-
     height: calc(100% - 48.8px);
     margin: 0.5rem;
     overflow-wrap: break-word;
     position: relative;
+    display: flex;
+    flex-direction: column;
   }
 
   &__icons {
@@ -40,5 +40,11 @@
     display: flex;
     position: absolute;
     right: 0;
+  }
+
+  &__avatars {
+    width: fit-content;
+    margin-left: auto;
+    cursor: default;
   }
 }

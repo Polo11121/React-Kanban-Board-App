@@ -8,13 +8,15 @@ type useGetSectionsType = {
 
 export const useGetSections = (): useGetSectionsType => {
   const getSections = () =>
-    axios.get('http://localhost:3001/api/sections').then((resp) =>
-      resp.data.map((section: { [x: string]: any; name: any }) => ({
-        id: section['_id'],
-        name: section.name,
-        taskLimit: section.taskLimit,
-      }))
-    );
+    axios
+      .get('https://chadsoft-kanban-backend.herokuapp.com/api/sections')
+      .then((resp) =>
+        resp.data.map((section: { [x: string]: any; name: any }) => ({
+          id: section['_id'],
+          name: section.name,
+          taskLimit: section.taskLimit,
+        }))
+      );
 
   const { data, isLoading } = useQuery('sections', getSections);
 

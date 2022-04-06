@@ -9,8 +9,8 @@ type useGetSectionsType = {
 export const useGetColumnsOrder = (): useGetSectionsType => {
   const getColumnsOrder = () =>
     axios
-      .get('http://localhost:3001/api/arrayColumns')
-      .then((resp) => resp.data[0].idColumns);
+      .get('https://chadsoft-kanban-backend.herokuapp.com/api/arrayColumns')
+      .then((resp) => resp.data[0]?.idColumns);
 
   const { data, isLoading } = useQuery('columnsOrder', getColumnsOrder);
 

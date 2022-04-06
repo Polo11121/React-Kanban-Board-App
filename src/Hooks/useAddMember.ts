@@ -9,7 +9,7 @@ export const useAddMember = (onSuccess: () => void) => {
     memberName: string;
     memberAvatarSrc: string;
   }) =>
-    axios.post('http://localhost:3001/api/member', {
+    axios.post('https://chadsoft-kanban-backend.herokuapp.com/api/users', {
       name: memberName,
       surname: memberAvatarSrc || 'mock',
     });

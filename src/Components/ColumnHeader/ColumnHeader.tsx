@@ -5,7 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ReportIcon from '@mui/icons-material/Report';
 import AllInclusiveIcon from '@mui/icons-material/AllInclusive';
 import { Tooltip } from '@mui/material';
-
+import { trimText } from 'shared/helpers/formatters';
 import classes from './ColumnHeader.module.scss';
 
 type ColumnHeaderProps = {
@@ -69,7 +69,11 @@ export const ColumnHeader = ({
       }}
     >
       <div className={classes['column-header__info']}>
-        <div style={{ cursor: 'pointer' }}>{title}</div>
+        <div style={{ cursor: 'pointer' }}>
+          <Tooltip arrow title={`${title.length > 10 ? title : ''}`}>
+            <span>{trimText(title, 10)}</span>
+          </Tooltip>
+        </div>
         <div
           style={{
             display: 'flex',

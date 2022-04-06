@@ -74,8 +74,9 @@ export const useManageColumnModal = ({
 
   const isNameInvalid = !name.trim().length && isValuesTouched.name;
   const isNumberOfTasksInvalid =
-    !numberOfTasks.trim().match(/^[0-9]+[0-9]*$/) &&
-    isValuesTouched.numberOfTasks;
+    (!numberOfTasks.trim().match(/^[0-9]+[0-9]*$/) &&
+      isValuesTouched.numberOfTasks) ||
+    +numberOfTasks > 999999999;
 
   const haveValuesChanged =
     modalInfo.title === 'edit'

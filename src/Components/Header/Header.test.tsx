@@ -2,7 +2,7 @@ import { Header } from 'Components';
 import { render, screen } from 'shared/helpers/test-utils';
 
 beforeEach(() => {
-  render(<Header />);
+  render(<Header onLogout={jest.fn} />);
 });
 
 describe.skip('Header', () => {
