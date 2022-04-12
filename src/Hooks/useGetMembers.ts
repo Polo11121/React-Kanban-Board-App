@@ -1,9 +1,10 @@
-import axios from 'axios';
 import { useQuery } from 'react-query';
+import { MemberType } from 'shared/types/Kanban.type';
+import axios from 'axios';
 
 type useGetMembersType = {
-  members: { id: string; name: string; avatarSrc: string; email: string }[];
-  isLoading: boolean;
+  members: MemberType[];
+  isInitialLoaded: boolean;
 };
 
 export const useGetMembers = (): useGetMembersType => {
@@ -16,12 +17,13 @@ export const useGetMembers = (): useGetMembersType => {
           name: member.name,
           avatarSrc: member.photo,
           email: member.email,
+          taskCount: member.taskCount,
         }))
       );
 
-  const { data, isLoading } = useQuery('members', getMembers);
+  const { data, isFetchedAfterMount } = useQuery('members', getMembers);
 
   return data
-    ? { members: data, isLoading }
-    : { members: [], isLoading: false };
+    ? { members: data, isInitialLoaded: isFetchedAfterMount }
+    : { members: [], isInitialLoaded: false };
 };

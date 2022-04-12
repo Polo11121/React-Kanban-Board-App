@@ -1,11 +1,11 @@
-import { useGetColumnsOrder } from 'Hooks/useGetColumnsOrder';
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { useGetColumnsOrder } from 'Hooks/useGetColumnsOrder';
+import { useChangeColumnsOrder } from 'Hooks/useChangeColumnsOrder';
 import { useManageColumn } from 'Hooks/useManageColumn';
 import { useCustomToast } from 'shared/helpers/useCustomToast';
+import { ColumnModalInfoType } from 'shared/types/Kanban.type';
 import { ColorResult } from 'react-color';
 import { useQueryClient } from 'react-query';
-import { ColumnModalInfoType } from 'shared/types/Kanban';
-import { useChangeColumnsOrder } from 'Hooks/useChangeColumnsOrder';
 
 type useManageColumnModalProps = {
   onClose: () => void;
@@ -17,6 +17,7 @@ export const useManageColumnModal = ({
   modalInfo,
 }: useManageColumnModalProps) => {
   const queryClient = useQueryClient();
+  const columnsOrder = useGetColumnsOrder();
   const [color, setColor] = useState('#2e7d32');
   const [isValuesTouched, setIsValuesTouched] = useState({
     name: false,
@@ -77,7 +78,6 @@ export const useManageColumnModal = ({
     (!numberOfTasks.trim().match(/^[0-9]+[0-9]*$/) &&
       isValuesTouched.numberOfTasks) ||
     +numberOfTasks > 999999999;
-
   const haveValuesChanged =
     modalInfo.title === 'edit'
       ? name.trim() !== modalInfo.name ||
@@ -85,11 +85,13 @@ export const useManageColumnModal = ({
         color !== modalInfo.color
       : isValuesTouched.name && isValuesTouched.numberOfTasks;
 
-  const { mutate, isLoading, mutateAsync } = useManageColumn(onSuccess);
+  const {
+    mutate: mutateManageColumn,
+    isLoading,
+    mutateAsync,
+  } = useManageColumn(onSuccess);
 
-  const { columnsOrder } = useGetColumnsOrder();
-
-  const { mutateAsync: mutateColumnsOrder } = useChangeColumnsOrder(() => null);
+  const { mutateAsync: mutateColumnsOrder } = useChangeColumnsOrder();
 
   const manageColumnHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -107,7 +109,7 @@ export const useManageColumnModal = ({
             columnsOrder: [...columnsOrder, resp.data.data.id],
           }).then(() => queryClient.invalidateQueries('columnsOrder'));
         })
-      : mutate({
+      : mutateManageColumn({
           method: 'PUT',
           payload: {
             color,
@@ -118,17 +120,19 @@ export const useManageColumnModal = ({
         });
   };
 
+  const isDisabled =
+    isNameInvalid || isNumberOfTasksInvalid || isLoading || !haveValuesChanged;
+
   return {
     manageColumnHandler,
     changeColorHandler,
     changeNumberOfTasksHandler,
     changeNameHandler,
-    isLoading,
     isNameInvalid,
     isNumberOfTasksInvalid,
-    haveValuesChanged,
     color,
     name,
     numberOfTasks,
+    isDisabled,
   };
 };

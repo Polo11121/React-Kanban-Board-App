@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import { TasksList } from 'Pages/Kanban/TasksList/TasksList';
 import { ManageTaskModal } from 'Pages/Kanban/ManageTaskModal/ManageTaskModal';
 import { useColumnList } from 'Pages/Kanban/helpers/useColumnList';
-import { Column, SectionName } from 'Components';
-import { ColumnType } from 'shared/types/Kanban';
+import { ColumnType } from 'shared/types/Kanban.type';
 import { useCustomToast } from 'shared/helpers/useCustomToast';
+import { countColumnHeight } from 'shared/helpers/columnHeight';
+import { Column, SectionName } from 'Components';
 import { Droppable } from 'react-beautiful-dnd';
 import AddIcon from '@mui/icons-material/Add';
 import classes from './ColumnList.module.scss';
@@ -13,17 +14,20 @@ type ColumnsListType = {
   section: { id: string; name: string; taskLimit: number };
   columns: ColumnType[];
   isSections: boolean;
+  isDropDisabled: boolean;
+  isTasksLoading: boolean;
 };
 
 export const ColumnsList = ({
   columns,
   section,
   isSections,
+  isDropDisabled,
+  isTasksLoading,
 }: ColumnsListType) => {
   const [isOpen, setIsOpen] = useState(
     Boolean(localStorage.getItem(section.name))
   );
-
   const {
     showModalHandler,
     deleteTaskHandler,
@@ -81,7 +85,11 @@ export const ColumnsList = ({
       )}
       <div style={{ display: `${isOpen ? 'flex' : 'none'}` }}>
         {columns?.map(({ name, color, id, tasks, numberOfTasks }) => (
-          <Droppable key={id} droppableId={`${id}:${section.id}`}>
+          <Droppable
+            isDropDisabled={isDropDisabled}
+            key={id}
+            droppableId={`${id}:${section.id}`}
+          >
             {(droppableProvided) => (
               <div
                 {...droppableProvided.droppableProps}
@@ -90,24 +98,12 @@ export const ColumnsList = ({
                 <Column title={name}>
                   <>
                     <div
-                      style={{
-                        minHeight: `${
-                          Math.max(
-                            1,
-                            ...columns.map(
-                              ({ tasks: columnTasks }) =>
-                                columnTasks.filter(
-                                  ({ idSection }) => idSection === section.id
-                                ).length
-                            )
-                          ) *
-                            220 +
-                          18
-                        }px`,
-                      }}
+                      style={{ minHeight: countColumnHeight(columns, section) }}
                       className={classes['column-list__task-list']}
                     >
                       <TasksList
+                        isTasksLoading={isTasksLoading}
+                        isDropDisabled={!isDropDisabled}
                         idSection={section.id}
                         columnId={id}
                         onDelete={deleteTaskHandler}

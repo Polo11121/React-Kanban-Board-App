@@ -4,7 +4,7 @@
   color: #fff;
   display: flex;
   font-family: 'Montserrat', sans-serif;
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 800;
   height: 3rem;
   justify-content: center;
@@ -23,8 +23,8 @@
     justify-content: center;
   }
 
-  &__warrning--icon {
-    left: 7px;
+  &__warning--icon {
+    left: 0.438rem;
     position: absolute;
   }
 
@@ -36,6 +36,6 @@
 
   &__icons {
     position: absolute;
-    right: 7px;
+    right: 0.438rem;
   }
 }

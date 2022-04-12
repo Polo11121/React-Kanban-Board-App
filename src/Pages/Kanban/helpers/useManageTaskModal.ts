@@ -1,11 +1,11 @@
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useGetMembers } from 'Hooks/useGetMembers';
 import { useGetSections } from 'Hooks/useGetSections';
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { useCustomToast } from 'shared/helpers/useCustomToast';
-import { useQueryClient } from 'react-query';
-import { TaskModalInfoType } from 'shared/types/Kanban';
 import { useManageColumn } from 'Hooks/useManageColumn';
 import { useGetColumns } from 'Hooks/useGetColumns';
+import { useCustomToast } from 'shared/helpers/useCustomToast';
+import { TaskModalInfoType } from 'shared/types/Kanban.type';
+import { useQueryClient } from 'react-query';
 
 type UseManageTaskModalProps = {
   onClose: () => void;
@@ -16,20 +16,24 @@ export const useManageTaskModal = ({
   onClose,
   modalInfo,
 }: UseManageTaskModalProps) => {
-  const queryClient = useQueryClient();
   const [isValuesTouched, setIsValuesTouched] = useState({
     name: false,
     description: false,
   });
-  const [inputValues, setInputValues] = useState({
+  const [inputValues, setInputValues] = useState<{
+    name: string;
+    description: string;
+    members: { value: string; label: string; avatarSrc: string }[] | null;
+  }>({
     name: '',
     description: '',
-    members: [] as { value: string; label: string; avatarSrc: string }[],
+    members: null,
   });
   const { name, description, members: chosenMembers } = inputValues;
-  const { columns } = useGetColumns();
+  const columns = useGetColumns();
   const { sections } = useGetSections();
   const { members } = useGetMembers();
+  const queryClient = useQueryClient();
 
   const changeNameHandler = (event: ChangeEvent<HTMLInputElement>) => {
     setIsValuesTouched((prevValues) => ({
@@ -63,6 +67,7 @@ export const useManageTaskModal = ({
   const onSuccess = () => {
     const column = columns.find(({ id }) => id === modalInfo.columnId);
     queryClient.invalidateQueries('columns');
+    queryClient.invalidateQueries('members');
     useCustomToast({
       text: `Task successfully ${modalInfo.title}ed`,
       type: 'success',
@@ -133,12 +138,13 @@ export const useManageTaskModal = ({
     !description.trim().length && isValuesTouched.description;
   const haveValuesChanged =
     modalInfo.title === 'edit'
-      ? name.trim() !== modalInfo.name ||
-        description.trim() !== modalInfo.description ||
-        chosenMembers
-          .map(({ value }) => value)
-          .sort()
-          .join(',') !== modalInfo.idMember.sort().join(',')
+      ? (name && name.trim() !== modalInfo.name) ||
+        (description && description.trim() !== modalInfo.description) ||
+        (chosenMembers &&
+          chosenMembers
+            .map(({ value }) => value)
+            .sort()
+            .join(',') !== modalInfo.idMember.sort().join(','))
       : isValuesTouched.name && isValuesTouched.description;
 
   const { mutate, isLoading } = useManageColumn(onSuccess);
@@ -152,7 +158,9 @@ export const useManageTaskModal = ({
             name: name.trim(),
             description: description.trim(),
             column: modalInfo.columnId,
-            idMember: inputValues.members.map(({ value }) => value),
+            idMember: inputValues.members
+              ? inputValues.members.map(({ value }) => value)
+              : [],
             idSection: modalInfo.idSection,
           },
           endpoint: `tasks`,
@@ -163,25 +171,29 @@ export const useManageTaskModal = ({
             name: name.trim(),
             description: description.trim(),
             column: modalInfo.columnId,
-            idMember: inputValues.members.map(({ value }) => value),
+            idMember: inputValues.members
+              ? inputValues.members.map(({ value }) => value)
+              : [],
             idSection: modalInfo.idSection,
           },
           endpoint: `tasks/${modalInfo.taskId}`,
         });
   };
 
+  const isDisabled =
+    isNameInvalid || isDescriptionInvalid || isLoading || !haveValuesChanged;
+
   return {
     manageTaskHandler,
     changeDescriptionHandler,
     changeNameHandler,
-    isLoading,
     isNameInvalid,
     isDescriptionInvalid,
-    haveValuesChanged,
     name,
     description,
     members,
     chosenMembers,
     changeMembersHandler,
+    isDisabled,
   };
 };

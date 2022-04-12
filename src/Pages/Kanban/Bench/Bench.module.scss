@@ -1,0 +1,26 @@
+.bench {
+  margin-top: 1rem;
+  text-align: center;
+  width: 10rem;
+
+  &__title {
+    font-family: 'Montserrat';
+    font-size: 1rem;
+    font-weight: 800;
+  }
+
+  &__members {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  &__member-container {
+    margin: 0.313rem;
+  }
+
+  &__member {
+    pointer-events: none;
+  }
+}

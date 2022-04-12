@@ -1,6 +1,5 @@
-import { Task } from 'Components';
-import { Draggable } from 'react-beautiful-dnd';
-import { TaskType } from 'shared/types/Kanban';
+import { Task, Draggable } from 'Components';
+import { TaskType } from 'shared/types/Kanban.type';
 
 type TaskListProps = {
   tasks: TaskType[];
@@ -23,6 +22,8 @@ type TaskListProps = {
     idSection: string;
   }) => void;
   columnId: string;
+  isDropDisabled: boolean;
+  isTasksLoading: boolean;
 };
 
 export const TasksList = ({
@@ -32,34 +33,31 @@ export const TasksList = ({
   onDelete,
   onEdit,
   idSection,
+  isTasksLoading,
+  isDropDisabled,
 }: TaskListProps) => (
   <>
     {tasks?.map(({ id, name, description, idMember }, index) => (
       <Draggable
+        isDragDisabled={isTasksLoading}
         key={id}
-        draggableId={`${columnId}-${idSection}-${id}`}
+        id={`${columnId}-${idSection}-${id}`}
         index={index}
       >
-        {(draggableProvided) => (
-          <div
-            {...draggableProvided.dragHandleProps}
-            {...draggableProvided.draggableProps}
-            ref={draggableProvided.innerRef}
-          >
-            <Task
-              members={idMember}
-              idSection={idSection}
-              onEdit={onEdit}
-              columnId={columnId}
-              onDelete={onDelete}
-              title={name}
-              description={description}
-              key={id}
-              id={id}
-              color={color}
-            />
-          </div>
-        )}
+        <Task
+          isDisabled={isTasksLoading}
+          isDropDisabled={isDropDisabled || isTasksLoading}
+          members={idMember}
+          idSection={idSection}
+          onEdit={onEdit}
+          columnId={columnId}
+          onDelete={onDelete}
+          title={name}
+          description={description}
+          key={id}
+          id={id}
+          color={color}
+        />
       </Draggable>
     ))}
   </>

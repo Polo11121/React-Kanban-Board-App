@@ -42,12 +42,18 @@ export const useManageSectionModal = (onClose: () => void) => {
     onClose();
   };
 
-  const { mutate } = useAddSection(onSuccess);
+  const mutate = useAddSection(onSuccess);
 
   const addSectionHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     mutate({ sectionName, sectionMaximumNumberOfTasks });
   };
+
+  const isDisabled =
+    !sectionName ||
+    !sectionMaximumNumberOfTasks ||
+    isSectionNameInvalid ||
+    isSectionMaximumNumberOfTasksInvalid;
 
   return {
     addSectionHandler,
@@ -57,5 +63,6 @@ export const useManageSectionModal = (onClose: () => void) => {
     sectionMaximumNumberOfTasksHandler,
     isSectionNameInvalid,
     isSectionMaximumNumberOfTasksInvalid,
+    isDisabled,
   };
 };

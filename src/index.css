@@ -26,7 +26,7 @@ code {
 .MuiAvatar-circular,
 .MuiAvatar-colorDefault,
 .MuiAvatarGroup-avatar {
-  height: 30px !important;
-  width: 30px !important;
+  height: 1.875rem !important;
+  width: 1.875rem !important;
   align-content: flex-start !important;
 }

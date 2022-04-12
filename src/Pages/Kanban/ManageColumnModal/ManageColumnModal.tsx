@@ -1,6 +1,6 @@
-import { Modal } from 'Components';
-import { ColumnModalInfoType } from 'shared/types/Kanban';
 import { useManageColumnModal } from 'Pages/Kanban/helpers/useManageColumnModal';
+import { ColumnModalInfoType } from 'shared/types/Kanban.type';
+import { Modal } from 'Components';
 import { Button, TextField } from '@mui/material';
 import { CirclePicker } from 'react-color';
 import CloseIcon from '@mui/icons-material/Close';
@@ -20,17 +20,13 @@ export const ManageColumnModal = ({
     changeColorHandler,
     changeNumberOfTasksHandler,
     changeNameHandler,
-    isLoading,
     isNameInvalid,
     isNumberOfTasksInvalid,
-    haveValuesChanged,
     color,
     name,
     numberOfTasks,
+    isDisabled,
   } = useManageColumnModal({ modalInfo, onClose });
-
-  const isButtonDisabled =
-    isNameInvalid || isNumberOfTasksInvalid || isLoading || !haveValuesChanged;
 
   return (
     <Modal onClose={onClose}>
@@ -70,7 +66,7 @@ export const ManageColumnModal = ({
           value={numberOfTasks}
           onChange={changeNumberOfTasksHandler}
         />
-        <p style={{ fontSize: '10px', marginTop: '-8px', color: '#0288d1' }}>
+        <p className={classes['manage-column-modal__info-text']}>
           * Type 0 if you don`t want column to have maximum number of tasks
         </p>
         <p style={{ color, marginTop: '1rem' }}>
@@ -81,7 +77,7 @@ export const ManageColumnModal = ({
         </div>
         <Button
           type="submit"
-          disabled={isButtonDisabled}
+          disabled={isDisabled}
           variant="contained"
           color="success"
         >

@@ -1,21 +1,16 @@
-import AddIcon from '@mui/icons-material/Add';
 import { useKanban } from 'Pages/Kanban/helpers/useKanban';
-import { useChangeColumnsOrder } from 'Hooks/useChangeColumnsOrder';
 import { ManageColumnModal } from 'Pages/Kanban/ManageColumnModal/ManageColumnModal';
 import { ColumnsHeaders } from 'Pages/Kanban/ColumnsHeaders/ColumnsHeaders';
 import { ColumnsList } from 'Pages/Kanban/ColumnsList/ColumnsList';
-import { useMoveTask } from 'Pages/Kanban/helpers/useMoveTask';
+import { Bench } from 'Pages/Kanban/Bench/Bench';
+import { useMove } from 'Pages/Kanban/helpers/useMove';
+import { Droppable } from 'Components';
 import { Backdrop, CircularProgress } from '@mui/material';
-import { DragDropContext, DropResult } from 'react-beautiful-dnd';
-import { useQueryClient } from 'react-query';
-import { useCustomToast } from 'shared/helpers/useCustomToast';
-import { useState } from 'react';
+import { DragDropContext } from 'react-beautiful-dnd';
+import AddIcon from '@mui/icons-material/Add';
 import classes from './Kanban.module.scss';
 
-const Kanban = () => {
-  const [isHeadersLoading, setIsHeadersLoading] = useState(false);
-  const queryClient = useQueryClient();
-
+export const Kanban = () => {
   const {
     editColumnHandler,
     deleteColumnHandler,
@@ -23,69 +18,29 @@ const Kanban = () => {
     hideModalHandler,
     columns,
     manageColumnModalInfo,
-    isLoading,
+    setColumns,
+    isInitialLoading,
     sections,
     columnsOrder,
   } = useKanban();
 
-  const onSuccess = () => {
-    useCustomToast({ text: 'Column successfully moved', type: 'success' });
-    queryClient.invalidateQueries('columns');
-    queryClient
-      .invalidateQueries('columnsOrder')
-      .then(() => setIsHeadersLoading(false));
-  };
-
-  const { moveTask, sourceColumnId, destinationColumnId } = useMoveTask();
-  const { mutate } = useChangeColumnsOrder(onSuccess);
-
-  const handleMoveTask = (result: DropResult) => {
-    const { source, destination } = result;
-
-    if (source.droppableId === destination?.droppableId || !destination) {
-      return;
-    }
-
-    const task = columns
-      .find(({ id }) => id === source.droppableId.split(':')[0])
-      ?.tasks.filter(
-        ({ idSection }) => idSection === source.droppableId.split(':')[1]
-      )[source.index];
-    if (task && destination) {
-      moveTask({
-        task,
-        sourceColumnId: source.droppableId,
-        destinationColumnId: destination.droppableId,
-      });
-    }
-  };
-
-  const handleMoveColumn = (result: DropResult) => {
-    const { source, destination, draggableId } = result;
-
-    if (destination?.index === source.index || !destination) {
-      return;
-    }
-
-    setIsHeadersLoading(true);
-    const newColumnsOrder = columnsOrder.filter(
-      (columnId) => columnId !== draggableId
-    );
-    mutate({
-      columnsOrder: [
-        ...newColumnsOrder.slice(0, destination?.index),
-        draggableId,
-        ...newColumnsOrder.slice(destination?.index),
-      ],
-    });
-  };
+  const {
+    handleMoveTask,
+    handleMoveColumn,
+    isUserMoved,
+    onDragStart,
+    isTaskMoved,
+    isLoading: isTasksLoading,
+    isBenchLoading,
+  } = useMove({
+    columns,
+    columnsOrder,
+    setColumns,
+  });
 
   return (
     <div className={classes.kanban}>
-      {isLoading ||
-      columns.some((column) => column === undefined) ||
-      isHeadersLoading ||
-      (sourceColumnId && destinationColumnId) ? (
+      {isInitialLoading || columns === null ? (
         <Backdrop
           open
           sx={{
@@ -96,7 +51,7 @@ const Kanban = () => {
           <CircularProgress color="success" />
         </Backdrop>
       ) : (
-        <>
+        <DragDropContext onDragEnd={handleMoveTask} onDragStart={onDragStart}>
           <div className={classes['kanban__content']}>
             <DragDropContext onDragEnd={handleMoveColumn}>
               <ColumnsHeaders
@@ -105,35 +60,38 @@ const Kanban = () => {
                 onEdit={editColumnHandler}
               />
             </DragDropContext>
-            <DragDropContext onDragEnd={handleMoveTask}>
-              {sections?.map((section) => (
-                <ColumnsList
-                  isSections={sections.length > 1}
-                  key={section.id}
-                  section={section}
-                  columns={columns}
-                />
-              ))}
-            </DragDropContext>
+            {sections?.map((section) => (
+              <ColumnsList
+                isTasksLoading={isTasksLoading}
+                isDropDisabled={isUserMoved}
+                isSections={sections.length > 1}
+                key={section.id}
+                section={section}
+                columns={columns}
+              />
+            ))}
           </div>
-          <button
-            className={classes['kanban__add-column-button']}
-            onClick={showModalHandler}
-            type="button"
-          >
-            <AddIcon />
-            Add Column
-          </button>
+          <div className={classes['kanban__section']}>
+            <button
+              className={classes['kanban__add-column-button']}
+              onClick={showModalHandler}
+              type="button"
+            >
+              <AddIcon />
+              Add Column
+            </button>
+            <Droppable isDisabled={isTaskMoved || isUserMoved} id="bench">
+              <Bench isBenchLoading={isBenchLoading} />
+            </Droppable>
+          </div>
           {manageColumnModalInfo.isOpen && (
             <ManageColumnModal
               modalInfo={manageColumnModalInfo}
               onClose={hideModalHandler}
             />
           )}
-        </>
+        </DragDropContext>
       )}
     </div>
   );
 };
-
-export default Kanban;

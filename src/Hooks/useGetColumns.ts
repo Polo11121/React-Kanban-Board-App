@@ -1,13 +1,8 @@
-import axios from 'axios';
-import { ColumnType } from 'shared/types/Kanban';
+import { ColumnType } from 'shared/types/Kanban.type';
 import { useQuery } from 'react-query';
+import axios from 'axios';
 
-type useGetColumnsType = {
-  columns: ColumnType[];
-  isLoading: boolean;
-};
-
-export const useGetColumns = (): useGetColumnsType => {
+export const useGetColumns = () => {
   const getColumns = (): Promise<ColumnType[]> =>
     axios
       .get('https://chadsoft-kanban-backend.herokuapp.com/api/columns')
@@ -36,9 +31,7 @@ export const useGetColumns = (): useGetColumnsType => {
         )
       );
 
-  const { data, isLoading } = useQuery('columns', getColumns);
+  const { data } = useQuery('columns', getColumns);
 
-  return data
-    ? { columns: data, isLoading }
-    : { columns: [], isLoading: false };
+  return data || [];
 };

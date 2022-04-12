@@ -7,6 +7,8 @@ beforeEach(() => {
 
   render(
     <Task
+      isDisabled={false}
+      isDropDisabled={false}
       members={[]}
       color="#fff"
       title="testTitle"

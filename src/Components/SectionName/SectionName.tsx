@@ -1,8 +1,9 @@
+import { Tooltip } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ReportIcon from '@mui/icons-material/Report';
-import { Tooltip } from '@mui/material';
+import classes from './SectionName.module.scss';
 
 type SectionNameProps = {
   name: string;
@@ -22,6 +23,7 @@ export const SectionName = ({
   handleRemoveSection,
 }: SectionNameProps) => (
   <div
+    className={classes['section-name']}
     style={{
       color: `${
         sectionNumberOfTasks > sectionMaximumNumberOfTasks &&
@@ -29,13 +31,6 @@ export const SectionName = ({
           ? 'red'
           : 'black'
       }`,
-      backgroundColor: 'white',
-      display: 'flex',
-      cursor: 'pointer',
-      marginLeft: '1rem',
-      position: 'sticky',
-      top: '57px',
-      zIndex: 3,
     }}
   >
     {isOpen ? (

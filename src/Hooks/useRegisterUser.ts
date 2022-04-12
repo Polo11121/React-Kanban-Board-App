@@ -1,6 +1,6 @@
-import axios from 'axios';
 import { useMutation } from 'react-query';
 import { UserType } from 'shared/types/User.type';
+import axios from 'axios';
 
 export const useRegisterUser = (onError: (data: any) => void) => {
   const registerUser = ({ name, photo, email, password }: UserType) =>
@@ -20,9 +20,9 @@ export const useRegisterUser = (onError: (data: any) => void) => {
           }
     );
 
-  const { mutate, isLoading, mutateAsync } = useMutation(registerUser, {
+  const { mutateAsync, isLoading } = useMutation(registerUser, {
     onError,
   });
 
-  return { mutateAsync, mutate, isLoading };
+  return { mutateAsync, isLoading };
 };
