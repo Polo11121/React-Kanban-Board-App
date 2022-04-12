@@ -77,7 +77,7 @@ export const ColumnHeader = ({
         <div
           style={{}}
           className={
-            tasks.length > numberOfTasks
+            tasks.length > numberOfTasks || numberOfTasks === 0
               ? classes['column-header__count--warning']
               : ''
           }
