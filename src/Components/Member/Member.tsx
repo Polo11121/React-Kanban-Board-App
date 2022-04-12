@@ -22,7 +22,7 @@ export const Member = ({
       <h2 style={{ fontSize }} className={classes['member__name']}>
         {name}
       </h2>
-      {numberOfTasks && <h3>{numberOfTasks} tasks</h3>}
+      {numberOfTasks !== undefined && <h3>{numberOfTasks} tasks</h3>}
     </div>
   </div>
 );
