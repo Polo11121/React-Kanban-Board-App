@@ -2,6 +2,7 @@ import { useGetTasksPerMembers } from 'Hooks/useGetTasksPerMembers';
 import { useGetMembers } from 'Hooks/useGetMembers';
 import { Draggable } from 'Components';
 import { CircularProgress, Tooltip } from '@mui/material';
+import AllInclusiveIcon from '@mui/icons-material/AllInclusive';
 import Avatar from 'react-avatar';
 import classes from './Bench.module.scss';
 
@@ -12,21 +13,31 @@ export const Bench = ({ isBenchLoading }: { isBenchLoading: boolean }) => {
   return (
     <div className={classes.bench}>
       <span className={classes['bench__title']}>BENCH</span>
+      <span className={classes['bench__limit']}>
+        Tasks limit:{' '}
+        {tasksPerMembers || (
+          <AllInclusiveIcon style={{ marginLeft: '5px' }} fontSize="small" />
+        )}
+      </span>
       <div className={classes['bench__members']}>
         {isBenchLoading ? (
           <CircularProgress style={{ margin: '0 auto' }} color="secondary" />
         ) : (
           members?.map(
             ({ avatarSrc, name, id, taskCount }, index) =>
-              tasksPerMembers &&
-              taskCount < tasksPerMembers && (
+              tasksPerMembers !== null &&
+              (taskCount < tasksPerMembers || tasksPerMembers === 0) && (
                 <Draggable key={id} id={id} index={index}>
                   <div className={classes['bench__member-container']}>
                     <Tooltip
                       arrow
                       key={id}
                       placement="bottom"
-                      title={`${name} (${taskCount}/${tasksPerMembers} tasks)`}
+                      title={
+                        tasksPerMembers === 0
+                          ? `${name} (${taskCount} tasks)`
+                          : `${name} (${taskCount}/${tasksPerMembers} tasks)`
+                      }
                     >
                       <div>
                         <Avatar

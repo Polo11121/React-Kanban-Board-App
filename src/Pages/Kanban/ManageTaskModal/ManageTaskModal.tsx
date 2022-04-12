@@ -92,7 +92,8 @@ export const ManageTaskModal = ({
           options={members
             .filter(
               ({ taskCount, id }) =>
-                (tasksPerMembers && taskCount < tasksPerMembers) ||
+                (tasksPerMembers !== null &&
+                  (taskCount < tasksPerMembers || tasksPerMembers === 0)) ||
                 modalInfo.idMember.includes(id)
             )
             .sort((memberA, memberB) =>
