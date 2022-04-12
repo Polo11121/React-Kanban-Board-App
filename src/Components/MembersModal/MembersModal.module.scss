@@ -1,20 +1,6 @@
 .members-modal {
   position: relative;
 
-  ::-webkit-scrollbar {
-    width: 15px;
-  }
-
-  ::-webkit-scrollbar-track {
-    border-radius: 10px;
-    box-shadow: inset 0 0 5px #808080;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: #34495e;
-    border-radius: 10px;
-  }
-
   &__exit-button {
     cursor: pointer;
     position: absolute;
@@ -27,5 +13,19 @@
     font-weight: 800;
     text-align: center;
     text-transform: uppercase;
+  }
+
+  ::-webkit-scrollbar {
+    width: 0.9375rem;
+  }
+
+  ::-webkit-scrollbar-track {
+    border-radius: 0.625rem;
+    box-shadow: inset 0 0 5px #808080;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #34495e;
+    border-radius: 0.625rem;
   }
 }

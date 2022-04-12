@@ -1,11 +1,11 @@
-import { TaskType } from 'shared/types/Kanban';
+import { TaskType } from 'shared/types/Kanban.type';
 import { useCustomToast } from 'shared/helpers/useCustomToast';
+import { trimText } from 'shared/helpers/formatters';
+import { Tooltip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ReportIcon from '@mui/icons-material/Report';
 import AllInclusiveIcon from '@mui/icons-material/AllInclusive';
-import { Tooltip } from '@mui/material';
-import { trimText } from 'shared/helpers/formatters';
 import classes from './ColumnHeader.module.scss';
 
 type ColumnHeaderProps = {
@@ -75,11 +75,7 @@ export const ColumnHeader = ({
           </Tooltip>
         </div>
         <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+          style={{}}
           className={
             tasks.length > numberOfTasks
               ? classes['column-header__count--warning']
@@ -95,7 +91,7 @@ export const ColumnHeader = ({
           placement="bottom"
           title={`Maximum number of tasks allowed in ${title} column has been reached. Close, move or remove task to fix this error!`}
         >
-          <div className={classes['column-header__warrning--icon']}>
+          <div className={classes['column-header__warning--icon']}>
             <ReportIcon fontSize="medium" />
           </div>
         </Tooltip>
@@ -117,5 +113,3 @@ export const ColumnHeader = ({
     </div>
   );
 };
-
-export default ColumnHeader;

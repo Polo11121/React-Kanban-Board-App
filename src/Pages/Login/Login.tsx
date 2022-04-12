@@ -1,5 +1,5 @@
+import { useManageLogin } from 'Pages/Login/helpers/useManageLogin';
 import { Link } from 'react-router-dom';
-import { useManageLogin } from 'Hooks/useManageLogin';
 import Logo from 'assets/chadban.png';
 import classes from './Login.module.scss';
 
@@ -11,6 +11,7 @@ export const Login = ({ onLogin }: { onLogin: (token: string) => void }) => {
     password,
     changePasswordHandler,
     error,
+    isLoading,
   } = useManageLogin(onLogin);
 
   return (
@@ -32,7 +33,13 @@ export const Login = ({ onLogin }: { onLogin: (token: string) => void }) => {
             type="password"
             placeholder="Password"
           />
-          <button type="submit" className={classes['login__button']}>
+          <button
+            disabled={isLoading}
+            type="submit"
+            className={
+              classes[`login__${isLoading ? 'button--disabled' : 'button'}`]
+            }
+          >
             Login
           </button>
           <p

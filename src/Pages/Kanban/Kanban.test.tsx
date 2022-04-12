@@ -1,6 +1,6 @@
 import { setupModal } from 'shared/helpers/setupModal';
 import { render, screen } from 'shared/helpers/test-utils';
-import Kanban from 'Pages/Kanban/Kanban';
+import { Kanban } from 'Pages/Kanban/Kanban';
 import userEvent from '@testing-library/user-event';
 
 beforeEach(() => {

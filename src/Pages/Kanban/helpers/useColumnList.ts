@@ -5,8 +5,7 @@ import { useRemoveSection } from 'Hooks/useRemoveSection';
 import { useQueryClient } from 'react-query';
 
 export const useColumnList = () => {
-  const queryClient = useQueryClient();
-  const [manageTaskModalInfo, setManageTaskModalInfo] = useState({
+  const initialState = {
     isOpen: false,
     columnId: '',
     name: '',
@@ -15,19 +14,11 @@ export const useColumnList = () => {
     title: 'add',
     idSection: '',
     idMember: [] as string[],
-  });
+  };
+  const queryClient = useQueryClient();
+  const [manageTaskModalInfo, setManageTaskModalInfo] = useState(initialState);
 
-  const hideModalHandler = () =>
-    setManageTaskModalInfo({
-      isOpen: false,
-      columnId: '',
-      name: '',
-      description: '',
-      taskId: '',
-      title: 'add',
-      idSection: '',
-      idMember: [],
-    });
+  const hideModalHandler = () => setManageTaskModalInfo(initialState);
 
   const showModalHandler = (id: string, idSection: string) =>
     setManageTaskModalInfo((prevInfo) => ({
@@ -38,24 +29,15 @@ export const useColumnList = () => {
     }));
 
   const onSuccess = () => {
-    setManageTaskModalInfo({
-      isOpen: false,
-      columnId: '',
-      name: '',
-      description: '',
-      taskId: '',
-      title: 'add',
-      idSection: '',
-      idMember: [],
-    });
+    setManageTaskModalInfo(initialState);
     useCustomToast({ text: 'Task successfully deleted', type: 'success' });
     queryClient.invalidateQueries('columns');
   };
 
-  const { mutate } = useManageColumn(onSuccess);
+  const { mutate: mutateManageColumn } = useManageColumn(onSuccess);
 
   const deleteTaskHandler = (taskId: string) =>
-    mutate({
+    mutateManageColumn({
       method: 'DELETE',
       endpoint: `tasks/${taskId}`,
     });
@@ -91,13 +73,12 @@ export const useColumnList = () => {
       text: `Section successfully removed`,
       type: 'success',
     });
+
     queryClient.invalidateQueries('columns');
     queryClient.invalidateQueries('sections');
   };
 
-  const { mutate: mutateRemoveSection } = useRemoveSection(
-    onSuccessRemoveSection
-  );
+  const mutateRemoveSection = useRemoveSection(onSuccessRemoveSection);
 
   const removeSectionHandler = (sectionId: string) =>
     mutateRemoveSection(sectionId);

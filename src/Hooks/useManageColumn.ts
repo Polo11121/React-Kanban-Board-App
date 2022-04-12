@@ -1,12 +1,12 @@
-import axios, { Method } from 'axios';
 import { useMutation } from 'react-query';
+import axios, { Method } from 'axios';
 
 type payloadTaskType = {
-  name: string;
-  description: string;
-  column: string;
-  idMember: string[];
-  idSection: string;
+  name?: string;
+  description?: string;
+  column?: string;
+  idMember?: string[];
+  idSection?: string;
 };
 
 type payloadColumnType = {
@@ -21,7 +21,7 @@ type useManageTaskProps = {
   endpoint: string;
 };
 
-export const useManageColumn = (onSuccess: () => void) => {
+export const useManageColumn = (onSuccess?: () => void) => {
   const manageColumn = ({ method, payload, endpoint }: useManageTaskProps) =>
     axios.request({
       url: `https://chadsoft-kanban-backend.herokuapp.com/api/${endpoint}`,

@@ -14,14 +14,14 @@
     font-family: 'Montserrat';
     height: 1.8rem;
     justify-content: center;
-    padding: 2px;
+    padding: 0.125rem;
     position: relative;
     text-align: center;
   }
 
   &__content {
     color: #000;
-    height: calc(100% - 48.8px);
+    height: calc(100% - 3.05rem);
     margin: 0.5rem;
     overflow-wrap: break-word;
     position: relative;
@@ -31,7 +31,7 @@
 
   &__icons {
     position: absolute;
-    right: 5px;
+    right: 0.3125rem;
   }
 
   &__members {
@@ -46,5 +46,9 @@
     width: fit-content;
     margin-left: auto;
     cursor: default;
+  }
+
+  &__member {
+    pointer-events: none;
   }
 }

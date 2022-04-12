@@ -1,8 +1,6 @@
-import { useState } from 'react';
-import { AddSectionModal } from 'Components';
-import { MembersModal } from 'Components/MembersModal/MembersModal';
+import { useHeader } from 'Pages/Kanban/helpers/useHeader';
+import { AddSectionModal, MembersModal } from 'Components';
 import { ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
-import { useGetMember } from 'Hooks/useGetMember';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Avatar from 'react-avatar';
 import AddIcon from '@mui/icons-material/Add';
@@ -11,25 +9,19 @@ import Logo from 'assets/chadban.png';
 import classes from './Header.module.scss';
 
 export const Header = ({ onLogout }: { onLogout: () => void }) => {
-  const [isAddSectionModalOpen, setIsAddSectionModalOpen] = useState(false);
-  const [isMembersModalOpen, setIsMembersModalOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const { member } = useGetMember(JSON.parse(sessionStorage.token).id);
-
-  const openSectionModalHandler = () => setIsAddSectionModalOpen(true);
-
-  const closeSectionModalHandler = () => setIsAddSectionModalOpen(false);
-
-  const openMembersModalHandler = () => setIsMembersModalOpen(true);
-
-  const closeMembersModalHandler = () => setIsMembersModalOpen(false);
-
-  const open = Boolean(anchorEl);
-
-  const handleClick = (event: React.MouseEvent<HTMLDivElement>) =>
-    setAnchorEl(event.currentTarget);
-
-  const handleClose = () => setAnchorEl(null);
+  const {
+    openMembersModalHandler,
+    openSectionModalHandler,
+    handleClick,
+    member,
+    anchorEl,
+    open,
+    handleClose,
+    isAddSectionModalOpen,
+    closeSectionModalHandler,
+    isMembersModalOpen,
+    closeMembersModalHandler,
+  } = useHeader();
 
   return (
     <header className={classes.header} data-testid="header">
@@ -58,16 +50,8 @@ export const Header = ({ onLogout }: { onLogout: () => void }) => {
           Add Section
         </button>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <div
-          onClick={handleClick}
-          style={{
-            cursor: 'pointer',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
+      <div className={classes['header__user-info']}>
+        <div className={classes['header__user-avatar']} onClick={handleClick}>
           <Avatar
             name={member.name}
             src={member.photo || member.name}
@@ -85,7 +69,6 @@ export const Header = ({ onLogout }: { onLogout: () => void }) => {
           </MenuItem>
         </Menu>
       </div>
-
       {isAddSectionModalOpen && (
         <AddSectionModal onClose={closeSectionModalHandler} />
       )}

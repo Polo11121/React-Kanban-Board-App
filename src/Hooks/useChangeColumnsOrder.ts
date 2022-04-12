@@ -1,7 +1,7 @@
-import axios from 'axios';
 import { useMutation } from 'react-query';
+import axios from 'axios';
 
-export const useChangeColumnsOrder = (onSuccess: () => void) => {
+export const useChangeColumnsOrder = (onSuccess?: () => void) => {
   const changeColumnsOrder = ({ columnsOrder }: { columnsOrder: string[] }) =>
     axios.patch(
       'https://chadsoft-kanban-backend.herokuapp.com/api/arrayColumns/624b532f3f95f547a043ea4c',
@@ -10,9 +10,9 @@ export const useChangeColumnsOrder = (onSuccess: () => void) => {
       }
     );
 
-  const { mutate, isLoading, mutateAsync } = useMutation(changeColumnsOrder, {
+  const { mutate, mutateAsync } = useMutation(changeColumnsOrder, {
     onSuccess,
   });
 
-  return { mutateAsync, mutate, isLoading };
+  return { mutateAsync, mutate };
 };

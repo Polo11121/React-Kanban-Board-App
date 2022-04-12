@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useLoginUser } from 'Hooks/useLoginUser';
 import { useCustomToast } from 'shared/helpers/useCustomToast';
+import { useNavigate } from 'react-router-dom';
 
 export const useManageLogin = (onLogin: (token: string) => void) => {
   const [inputValues, setInputValues] = useState({ email: '', password: '' });
@@ -42,7 +42,10 @@ export const useManageLogin = (onLogin: (token: string) => void) => {
     navigate('/kanban');
   };
 
-  const { mutateAsync: mutateLogin } = useLoginUser(onSuccess, onError);
+  const { mutateAsync: mutateLogin, isLoading } = useLoginUser(
+    onSuccess,
+    onError
+  );
 
   const loginHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -56,5 +59,6 @@ export const useManageLogin = (onLogin: (token: string) => void) => {
     password,
     changePasswordHandler,
     error,
+    isLoading,
   };
 };

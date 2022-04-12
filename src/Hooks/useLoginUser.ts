@@ -1,5 +1,5 @@
-import axios, { AxiosResponse } from 'axios';
 import { useMutation } from 'react-query';
+import axios, { AxiosResponse } from 'axios';
 
 export const useLoginUser = (
   onSuccess: (data: AxiosResponse<any, any>) => void,
@@ -17,7 +17,7 @@ export const useLoginUser = (
       password,
     });
 
-  const { mutate, isLoading, mutateAsync } = useMutation(loginUser, {
+  const { mutate, mutateAsync, isLoading } = useMutation(loginUser, {
     onSuccess,
     onError,
   });

@@ -1,6 +1,7 @@
-import { ColumnHeader } from 'Components/ColumnHeader/ColumnHeader';
-import { ColumnType, TaskType } from 'shared/types/Kanban';
-import { Droppable, Draggable } from 'react-beautiful-dnd';
+import { ColumnType, TaskType } from 'shared/types/Kanban.type';
+import { ColumnHeader, Draggable } from 'Components';
+import { Droppable } from 'react-beautiful-dnd';
+import classes from './ColumnsHeaders.module.scss';
 
 type ColumnsHeadersType = {
   onDelete: (id: string) => void;
@@ -28,40 +29,24 @@ export const ColumnsHeaders = ({
   <Droppable direction="horizontal" key="column" droppableId="column">
     {(droppableProvided) => (
       <div
+        className={classes['columns-headers']}
         {...droppableProvided.droppableProps}
         ref={droppableProvided.innerRef}
-        style={{
-          display: 'flex',
-          marginBottom: '1rem',
-          marginLeft: '1rem',
-          position: 'sticky',
-          top: '0',
-          backgroundColor: 'white',
-          zIndex: 4,
-        }}
       >
         {columns?.map(({ name, color, id, numberOfTasks, tasks }, index) => (
-          <Draggable key={id} draggableId={`${id}`} index={index}>
-            {(draggableProvided) => (
-              <div style={{ marginRight: '1rem' }}>
-                <div
-                  {...draggableProvided.dragHandleProps}
-                  {...draggableProvided.draggableProps}
-                  ref={draggableProvided.innerRef}
-                >
-                  <ColumnHeader
-                    key={id}
-                    title={name}
-                    color={color}
-                    numberOfTasks={numberOfTasks}
-                    onDelete={onDelete}
-                    onEdit={onEdit}
-                    id={id}
-                    tasks={tasks}
-                  />
-                </div>{' '}
-              </div>
-            )}
+          <Draggable key={id} id={id} index={index}>
+            <div style={{ marginRight: '1rem' }}>
+              <ColumnHeader
+                key={id}
+                title={name}
+                color={color}
+                numberOfTasks={numberOfTasks}
+                onDelete={onDelete}
+                onEdit={onEdit}
+                id={id}
+                tasks={tasks}
+              />
+            </div>
           </Draggable>
         ))}
         {droppableProvided.placeholder}

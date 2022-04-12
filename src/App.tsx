@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import Kanban from 'Pages/Kanban/Kanban';
-import { Header } from 'Components';
-import { ToastContainer } from 'react-toastify';
+import { Kanban } from 'Pages/Kanban/Kanban';
 import { Main } from 'Pages/Main/Main';
 import { Login } from 'Pages/Login/Login';
 import { Register } from 'Pages/Register/Register';
+import { Header } from 'Components';
+import { ToastContainer } from 'react-toastify';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import classes from './App.module.scss';
@@ -17,6 +17,7 @@ export const App = () => {
   }, []);
 
   const loginUser = (token: string) => setIsUserLoggedIn(token);
+
   const logoutUser = () => {
     setIsUserLoggedIn(null);
     sessionStorage.clear();

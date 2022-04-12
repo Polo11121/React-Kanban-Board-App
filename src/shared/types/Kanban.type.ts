@@ -35,3 +35,11 @@ export type TaskModalInfoType = {
   idSection: string;
   idMember: string[];
 };
+
+export type MemberType = {
+  id: string;
+  name: string;
+  avatarSrc: string;
+  email: string;
+  taskCount: number;
+};

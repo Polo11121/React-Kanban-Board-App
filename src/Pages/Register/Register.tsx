@@ -1,7 +1,7 @@
-import Logo from 'assets/chadban.png';
-import Avatar from 'react-avatar';
-import { useManageRegister } from 'Hooks/useManageRegister';
+import { useManageRegister } from 'Pages/Register/helpers/useManageRegister';
 import { Link } from 'react-router-dom';
+import Avatar from 'react-avatar';
+import Logo from 'assets/chadban.png';
 import classes from './Register.module.scss';
 
 export const Register = ({
@@ -31,10 +31,9 @@ export const Register = ({
       <div className={classes['register__container']}>
         <img className={classes['register__logo']} src={Logo} alt="logo" />
         <form onSubmit={registerHandler} className={classes['register__form']}>
-          <div style={{ marginBottom: '1rem' }}>
+          <div className={classes['register__input-container']}>
             <input
               className={classes['register__input']}
-              style={{ width: '174px' }}
               type="text"
               value={email}
               onChange={changeEmailHandler}
@@ -52,9 +51,8 @@ export const Register = ({
               Invalid email
             </p>
           </div>
-          <div style={{ marginBottom: '1rem' }}>
+          <div className={classes['register__input-container']}>
             <input
-              style={{ width: '174px' }}
               className={classes['register__input']}
               type="text"
               value={login}
@@ -72,17 +70,9 @@ export const Register = ({
               Invalid login
             </p>
           </div>
-          <div
-            style={{
-              marginBottom: '1rem',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
+          <div className={classes['register__password-input']}>
             <input
               className={classes['register__input']}
-              style={{ width: '174px' }}
               type="password"
               value={password}
               onChange={changePasswordHandler}
@@ -99,9 +89,8 @@ export const Register = ({
               Invalid password (min. 6 characters)
             </p>
           </div>
-          <div style={{ marginBottom: '1rem' }}>
+          <div className={classes['register__input-container']}>
             <input
-              style={{ width: '174px' }}
               className={classes['register__input']}
               type="password"
               value={repeatedPassword}
@@ -127,18 +116,12 @@ export const Register = ({
               display: 'flex',
               alignItems: 'center',
               paddingRight: '0',
+              width: 'fitContent',
             }}
           >
             <input
-              style={{
-                height: '100%',
-                border: 0,
-                backgroundColor: 'inherit',
-                outline: 'none',
-                marginRight: '5px',
-                width: '134px',
-              }}
               type="text"
+              className={classes['register__avatar-input']}
               value={avatarUrl}
               onChange={changeAvatarUrlHandler}
               placeholder="Avatar url"

@@ -1,6 +1,6 @@
+import { useManageSectionModal } from 'Pages/Kanban/helpers/useManageSectionModal';
 import { Modal } from 'Components';
 import { Button, TextField } from '@mui/material';
-import { useManageSectionModal } from 'Hooks/useManageSectionModal';
 import CloseIcon from '@mui/icons-material/Close';
 import classes from './AddSectionModal.module.scss';
 
@@ -13,6 +13,7 @@ export const AddSectionModal = ({ onClose }: { onClose: () => void }) => {
     sectionMaximumNumberOfTasksHandler,
     sectionName,
     sectionNameHandler,
+    isDisabled,
   } = useManageSectionModal(onClose);
 
   return (
@@ -53,23 +54,11 @@ export const AddSectionModal = ({ onClose }: { onClose: () => void }) => {
           value={sectionMaximumNumberOfTasks}
           onChange={sectionMaximumNumberOfTasksHandler}
         />
-        <p
-          style={{
-            fontSize: '10px',
-            marginTop: '-8px',
-            color: '#0288d1',
-            marginBottom: '1rem',
-          }}
-        >
+        <p className={classes['add-section__info-text']}>
           * Type 0 if you don`t want section to have maximum number of tasks
         </p>
         <Button
-          disabled={
-            !sectionName ||
-            !sectionMaximumNumberOfTasks ||
-            isSectionNameInvalid ||
-            isSectionMaximumNumberOfTasksInvalid
-          }
+          disabled={isDisabled}
           type="submit"
           variant="contained"
           color="success"

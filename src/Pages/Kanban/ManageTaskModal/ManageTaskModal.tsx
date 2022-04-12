@@ -1,8 +1,8 @@
-import { Modal } from 'Components';
 import { useManageTaskModal } from 'Pages/Kanban/helpers/useManageTaskModal';
-import { TaskModalInfoType } from 'shared/types/Kanban';
+import { useGetTasksPerMembers } from 'Hooks/useGetTasksPerMembers';
+import { TaskModalInfoType } from 'shared/types/Kanban.type';
+import { Modal, Member } from 'Components';
 import { Button, TextField } from '@mui/material';
-import { Member } from 'Components/Member/Member';
 import Select from 'react-select';
 import CloseIcon from '@mui/icons-material/Close';
 import classes from './ManageTaskModal.module.scss';
@@ -16,23 +16,20 @@ export const ManageTaskModal = ({
   onClose,
   modalInfo,
 }: ManageTaskModalProps) => {
+  const tasksPerMembers = useGetTasksPerMembers();
   const {
     manageTaskHandler,
     changeDescriptionHandler,
     changeNameHandler,
-    isLoading,
     isNameInvalid,
     isDescriptionInvalid,
-    haveValuesChanged,
     name,
     description,
     chosenMembers,
     members,
     changeMembersHandler,
+    isDisabled,
   } = useManageTaskModal({ onClose, modalInfo });
-
-  const isButtonDisabled =
-    isNameInvalid || isDescriptionInvalid || isLoading || !haveValuesChanged;
 
   return (
     <Modal onClose={onClose}>
@@ -93,6 +90,11 @@ export const ManageTaskModal = ({
           className={classes['manage-task-modal__select']}
           closeMenuOnSelect={false}
           options={members
+            .filter(
+              ({ taskCount, id }) =>
+                (tasksPerMembers && taskCount < tasksPerMembers) ||
+                modalInfo.idMember.includes(id)
+            )
             .sort((memberA, memberB) =>
               memberA.name.localeCompare(memberB.name)
             )
@@ -113,7 +115,7 @@ export const ManageTaskModal = ({
           )}
         />
         <Button
-          disabled={isButtonDisabled}
+          disabled={isDisabled}
           type="submit"
           variant="contained"
           color="success"

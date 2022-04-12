@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 
 type useGetSectionsType = {
   sections: { id: string; name: string; taskLimit: number }[];
-  isLoading: boolean;
+  isInitialLoaded: boolean;
 };
 
 export const useGetSections = (): useGetSectionsType => {
@@ -18,9 +18,9 @@ export const useGetSections = (): useGetSectionsType => {
         }))
       );
 
-  const { data, isLoading } = useQuery('sections', getSections);
+  const { data, isFetchedAfterMount } = useQuery('sections', getSections);
 
   return data
-    ? { sections: data, isLoading }
-    : { sections: [], isLoading: false };
+    ? { sections: data, isInitialLoaded: isFetchedAfterMount }
+    : { sections: [], isInitialLoaded: false };
 };

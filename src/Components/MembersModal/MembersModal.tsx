@@ -1,6 +1,5 @@
-import { Modal } from 'Components';
+import { Modal, MembersList } from 'Components';
 import CloseIcon from '@mui/icons-material/Close';
-import { MembersList } from 'Components/MembersList/MembersList';
 import classes from './MembersModal.module.scss';
 
 export const MembersModal = ({ onClose }: { onClose: () => void }) => {

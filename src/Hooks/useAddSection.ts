@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { useMutation } from 'react-query';
+import axios from 'axios';
 
 export const useAddSection = (onSuccess: () => void) => {
   const addSection = ({
@@ -14,9 +14,9 @@ export const useAddSection = (onSuccess: () => void) => {
       taskLimit: +sectionMaximumNumberOfTasks,
     });
 
-  const { mutate, isLoading, mutateAsync } = useMutation(addSection, {
+  const { mutate } = useMutation(addSection, {
     onSuccess,
   });
 
-  return { mutateAsync, mutate, isLoading };
+  return mutate;
 };

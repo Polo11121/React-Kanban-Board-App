@@ -1,9 +1,9 @@
-import { AxiosResponse } from 'axios';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import { useLoginUser } from 'Hooks/useLoginUser';
 import { useRegisterUser } from 'Hooks/useRegisterUser';
-import { ChangeEvent, FormEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useCustomToast } from 'shared/helpers/useCustomToast';
+import { AxiosResponse } from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export const useManageRegister = (onRegister: (token: string) => void) => {
   const [inputValues, setInputValues] = useState({
@@ -13,13 +13,12 @@ export const useManageRegister = (onRegister: (token: string) => void) => {
     repeatedPassword: '',
     avatarUrl: '',
   });
-  const [emailError, setEmailError] = useState(false);
   const [isInputValuesTouched, setIsInputValuesTouched] = useState({
     isLoginTouched: false,
     isPasswordTouched: false,
     email: false,
   });
-
+  const [emailError, setEmailError] = useState(false);
   const navigate = useNavigate();
   const { login, password, repeatedPassword, email, avatarUrl } = inputValues;
 
@@ -59,12 +58,11 @@ export const useManageRegister = (onRegister: (token: string) => void) => {
 
   const changeRepeatedPasswordHandler = (
     event: ChangeEvent<HTMLInputElement>
-  ) => {
+  ) =>
     setInputValues((prevState) => ({
       ...prevState,
       repeatedPassword: event.target.value,
     }));
-  };
 
   const changeAvatarUrlHandler = (event: ChangeEvent<HTMLInputElement>) =>
     setInputValues((prevState) => ({
@@ -87,9 +85,13 @@ export const useManageRegister = (onRegister: (token: string) => void) => {
     navigate('/');
   };
 
-  const { mutate: mutateLogin } = useLoginUser(onSuccess, onError);
+  const { mutate: mutateLogin, isLoading: isLoginLoading } = useLoginUser(
+    onSuccess,
+    onError
+  );
 
-  const { mutateAsync: mutateRegister } = useRegisterUser(onError);
+  const { mutateAsync: mutateRegister, isLoading: isRegisterLoading } =
+    useRegisterUser(onError);
 
   const registerHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -106,7 +108,9 @@ export const useManageRegister = (onRegister: (token: string) => void) => {
     password.length < 6 ||
     password !== repeatedPassword ||
     !email.includes('@') ||
-    emailError;
+    emailError ||
+    isRegisterLoading ||
+    isLoginLoading;
 
   return {
     registerHandler,
