@@ -29,6 +29,7 @@ export const ColumnsHeaders = ({
   <Droppable direction="horizontal" key="column" droppableId="column">
     {(droppableProvided) => (
       <div
+        style={{ width: `${257.59 * columns.length}px` }}
         className={classes['columns-headers']}
         {...droppableProvided.droppableProps}
         ref={droppableProvided.innerRef}

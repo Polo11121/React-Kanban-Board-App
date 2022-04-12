@@ -11,11 +11,16 @@ export const useMembersList = () => {
   const actualTasksPerMembers = useGetTasksPerMembers();
   const [tasksPerMembers, setTasksPerMembers] = useState(actualTasksPerMembers);
 
+  const minNumberOfTasks = Math.min(
+    ...members.map(({ taskCount }) => taskCount)
+  );
+
   const changeTaskPerMemberHandler = (event: ChangeEvent<HTMLInputElement>) =>
     setTasksPerMembers(+event.target.value);
 
   const isTasksPerMembersInvalid = Boolean(
-    tasksPerMembers && tasksPerMembers < 0
+    (tasksPerMembers && tasksPerMembers < 0) ||
+      (tasksPerMembers && tasksPerMembers < minNumberOfTasks)
   );
 
   const onSuccess = () => {
@@ -37,5 +42,6 @@ export const useMembersList = () => {
     changeTaskPerMemberHandler,
     submitTasksPerMembersHandler,
     actualTasksPerMembers,
+    minNumberOfTasks,
   };
 };

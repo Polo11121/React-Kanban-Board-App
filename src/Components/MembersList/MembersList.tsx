@@ -11,6 +11,7 @@ export const MembersList = () => {
     changeTaskPerMemberHandler,
     submitTasksPerMembersHandler,
     actualTasksPerMembers,
+    minNumberOfTasks,
   } = useMembersList();
 
   return (
@@ -32,7 +33,10 @@ export const MembersList = () => {
       </div>
       <TextField
         error={isTasksPerMembersInvalid}
-        helperText={isTasksPerMembersInvalid && 'Invalid number of tasks'}
+        helperText={
+          isTasksPerMembersInvalid &&
+          `Invalid number of tasks (min. ${minNumberOfTasks})`
+        }
         data-testid="member-list-number-of-tasks-input"
         margin="normal"
         type="number"
