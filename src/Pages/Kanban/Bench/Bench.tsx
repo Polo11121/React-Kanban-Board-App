@@ -8,15 +8,17 @@ import classes from './Bench.module.scss';
 
 export const Bench = ({ isBenchLoading }: { isBenchLoading: boolean }) => {
   const { members } = useGetMembers();
-  const tasksPerMembers = useGetTasksPerMembers();
+  const { tasksPerMembers } = useGetTasksPerMembers();
 
   return (
     <div className={classes.bench}>
       <span className={classes['bench__title']}>BENCH</span>
       <span className={classes['bench__limit']}>
         Tasks limit:{' '}
-        {tasksPerMembers || (
+        {tasksPerMembers === 0 ? (
           <AllInclusiveIcon style={{ marginLeft: '5px' }} fontSize="small" />
+        ) : (
+          tasksPerMembers
         )}
       </span>
       <div className={classes['bench__members']}>

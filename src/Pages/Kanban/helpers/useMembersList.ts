@@ -8,10 +8,10 @@ import { useCustomToast } from 'shared/helpers/useCustomToast';
 export const useMembersList = () => {
   const queryClient = useQueryClient();
   const { members } = useGetMembers();
-  const actualTasksPerMembers = useGetTasksPerMembers();
+  const { tasksPerMembers: actualTasksPerMembers } = useGetTasksPerMembers();
   const [tasksPerMembers, setTasksPerMembers] = useState(actualTasksPerMembers);
 
-  const minNumberOfTasks = Math.min(
+  const minNumberOfTasks = Math.max(
     ...members.map(({ taskCount }) => taskCount)
   );
 
@@ -19,8 +19,8 @@ export const useMembersList = () => {
     setTasksPerMembers(+event.target.value);
 
   const isTasksPerMembersInvalid = Boolean(
-    (tasksPerMembers && tasksPerMembers < 0) ||
-      (tasksPerMembers && tasksPerMembers < minNumberOfTasks)
+    (tasksPerMembers !== null && tasksPerMembers < 0) ||
+      (tasksPerMembers !== null && tasksPerMembers < minNumberOfTasks)
   );
 
   const onSuccess = () => {
@@ -33,11 +33,12 @@ export const useMembersList = () => {
   const { mutate: changeTasksPerMembers } = useChangeTasksPerMembers(onSuccess);
 
   const submitTasksPerMembersHandler = () =>
-    tasksPerMembers && changeTasksPerMembers(tasksPerMembers);
+    tasksPerMembers !== null && changeTasksPerMembers(tasksPerMembers);
 
   return {
     members,
-    isTasksPerMembersInvalid,
+    isTasksPerMembersInvalid:
+      tasksPerMembers === 0 ? false : isTasksPerMembersInvalid,
     tasksPerMembers,
     changeTaskPerMemberHandler,
     submitTasksPerMembersHandler,

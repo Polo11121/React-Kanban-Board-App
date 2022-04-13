@@ -7,7 +7,14 @@ export const useGetTasksPerMembers = () => {
       .get('https://chadsoft-kanban-backend.herokuapp.com/api/userTasksLimit')
       .then((resp) => resp.data[0].userTaskLimit);
 
-  const { data } = useQuery('tasksPerMembers', getTasksPerMembers);
+  const { data, isFetchedAfterMount } = useQuery(
+    'tasksPerMembers',
+    getTasksPerMembers
+  );
 
-  return data || null;
+  if (data !== undefined) {
+    return { tasksPerMembers: data, isInitialLoaded: isFetchedAfterMount };
+  }
+
+  return { tasksPerMembers: null, isInitialLoaded: isFetchedAfterMount };
 };
