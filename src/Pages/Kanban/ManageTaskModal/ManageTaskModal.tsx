@@ -16,7 +16,7 @@ export const ManageTaskModal = ({
   onClose,
   modalInfo,
 }: ManageTaskModalProps) => {
-  const tasksPerMembers = useGetTasksPerMembers();
+  const { tasksPerMembers } = useGetTasksPerMembers();
   const {
     manageTaskHandler,
     changeDescriptionHandler,

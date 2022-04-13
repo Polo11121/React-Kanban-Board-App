@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useGetColumns } from 'Hooks/useGetColumns';
 import { useManageColumn } from 'Hooks/useManageColumn';
+import { useGetTasksPerMembers } from 'Hooks/useGetTasksPerMembers';
 import { useGetSections } from 'Hooks/useGetSections';
 import { useGetMembers } from 'Hooks/useGetMembers';
 import { useGetColumnsOrder } from 'Hooks/useGetColumnsOrder';
@@ -26,6 +27,8 @@ export const useKanban = () => {
   const { sections, isInitialLoaded: isSectionsInitialLoaded } =
     useGetSections();
   const { isInitialLoaded: isMembersInitialLoaded } = useGetMembers();
+  const { isInitialLoaded: isTasksPerMembersInitialLoaded } =
+    useGetTasksPerMembers();
   const columnsOrder = useGetColumnsOrder();
   const queryClient = useQueryClient();
 
@@ -97,7 +100,10 @@ export const useKanban = () => {
     setColumns: setColumnsData,
     manageColumnModalInfo,
     sections: [...sections.slice(1), ...sections.slice(0, 1)],
-    isInitialLoading: !isMembersInitialLoaded || !isSectionsInitialLoaded,
+    isInitialLoading:
+      !isMembersInitialLoaded ||
+      !isSectionsInitialLoaded ||
+      !isTasksPerMembersInitialLoaded,
     columnsOrder,
   };
 };

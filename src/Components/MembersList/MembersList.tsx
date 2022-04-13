@@ -20,7 +20,7 @@ export const MembersList = () => {
         {members
           .sort((memberA, memberB) => memberA.name.localeCompare(memberB.name))
           .map(({ id, name, avatarSrc, taskCount }) => (
-            <div>
+            <div key={id}>
               <Member
                 numberOfTasks={taskCount}
                 style={{ marginBottom: '1rem' }}
