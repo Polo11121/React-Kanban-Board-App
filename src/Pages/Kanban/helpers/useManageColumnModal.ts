@@ -4,7 +4,6 @@ import { useChangeColumnsOrder } from 'Hooks/useChangeColumnsOrder';
 import { useManageColumn } from 'Hooks/useManageColumn';
 import { useCustomToast } from 'shared/helpers/useCustomToast';
 import { ColumnModalInfoType } from 'shared/types/Kanban.type';
-import { ColorResult } from 'react-color';
 import { useQueryClient } from 'react-query';
 
 type useManageColumnModalProps = {
@@ -18,7 +17,6 @@ export const useManageColumnModal = ({
 }: useManageColumnModalProps) => {
   const queryClient = useQueryClient();
   const columnsOrder = useGetColumnsOrder();
-  const [color, setColor] = useState('#2e7d32');
   const [isValuesTouched, setIsValuesTouched] = useState({
     name: false,
     numberOfTasks: false,
@@ -51,9 +49,6 @@ export const useManageColumnModal = ({
     }));
   };
 
-  const changeColorHandler = (pickedColor: ColorResult) =>
-    setColor(pickedColor.hex);
-
   const onSuccess = () => {
     queryClient.invalidateQueries('columns');
     useCustomToast({
@@ -69,7 +64,6 @@ export const useManageColumnModal = ({
         name: modalInfo.name,
         numberOfTasks: `${modalInfo.numberOfTasks}`,
       });
-      setColor(modalInfo.color);
     }
   }, []);
 
@@ -81,8 +75,7 @@ export const useManageColumnModal = ({
   const haveValuesChanged =
     modalInfo.title === 'edit'
       ? name.trim() !== modalInfo.name ||
-        +numberOfTasks !== modalInfo.numberOfTasks ||
-        color !== modalInfo.color
+        +numberOfTasks !== modalInfo.numberOfTasks
       : isValuesTouched.name && isValuesTouched.numberOfTasks;
 
   const {
@@ -99,7 +92,6 @@ export const useManageColumnModal = ({
       ? mutateAsync({
           method: 'POST',
           payload: {
-            color,
             name: name.trim(),
             numberOfTasks: +numberOfTasks,
           },
@@ -112,7 +104,6 @@ export const useManageColumnModal = ({
       : mutateManageColumn({
           method: 'PUT',
           payload: {
-            color,
             name: name.trim(),
             numberOfTasks: +numberOfTasks,
           },
@@ -125,12 +116,10 @@ export const useManageColumnModal = ({
 
   return {
     manageColumnHandler,
-    changeColorHandler,
     changeNumberOfTasksHandler,
     changeNameHandler,
     isNameInvalid,
     isNumberOfTasksInvalid,
-    color,
     name,
     numberOfTasks,
     isDisabled,

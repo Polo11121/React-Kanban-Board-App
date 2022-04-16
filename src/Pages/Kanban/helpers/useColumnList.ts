@@ -5,6 +5,12 @@ import { useRemoveSection } from 'Hooks/useRemoveSection';
 import { useQueryClient } from 'react-query';
 
 export const useColumnList = () => {
+  const [deleteInfo, setDeleteInfo] = useState({
+    title: '',
+    name: '',
+    id: '',
+    warning: false,
+  });
   const initialState = {
     isOpen: false,
     columnId: '',
@@ -13,6 +19,7 @@ export const useColumnList = () => {
     taskId: '',
     title: 'add',
     idSection: '',
+    color: '',
     idMember: [] as string[],
   };
   const queryClient = useQueryClient();
@@ -28,18 +35,22 @@ export const useColumnList = () => {
       idSection,
     }));
 
+  const onCloseDelete = () =>
+    setDeleteInfo({ title: '', name: '', id: '', warning: false });
+
   const onSuccess = () => {
     setManageTaskModalInfo(initialState);
-    useCustomToast({ text: 'Task successfully deleted', type: 'success' });
+    useCustomToast({ text: 'Task successfully removed', type: 'success' });
     queryClient.invalidateQueries('columns');
+    onCloseDelete();
   };
 
   const { mutate: mutateManageColumn } = useManageColumn(onSuccess);
 
-  const deleteTaskHandler = (taskId: string) =>
+  const deleteTaskHandler = () =>
     mutateManageColumn({
       method: 'DELETE',
-      endpoint: `tasks/${taskId}`,
+      endpoint: `tasks/${deleteInfo.id}`,
     });
 
   const editTaskHandler = ({
@@ -47,6 +58,7 @@ export const useColumnList = () => {
     name,
     description,
     taskId,
+    color,
     idSection,
     idMember,
   }: {
@@ -54,6 +66,7 @@ export const useColumnList = () => {
     name: string;
     description: string;
     taskId: string;
+    color: string;
     idSection: string;
     idMember: string[];
   }) =>
@@ -61,6 +74,7 @@ export const useColumnList = () => {
       isOpen: true,
       columnId,
       name,
+      color,
       description,
       taskId,
       title: 'edit',
@@ -76,12 +90,24 @@ export const useColumnList = () => {
 
     queryClient.invalidateQueries('columns');
     queryClient.invalidateQueries('sections');
+    onCloseDelete();
   };
 
   const mutateRemoveSection = useRemoveSection(onSuccessRemoveSection);
 
-  const removeSectionHandler = (sectionId: string) =>
-    mutateRemoveSection(sectionId);
+  const onDelete = ({
+    title,
+    name,
+    id,
+    warning,
+  }: {
+    title: string;
+    name: string;
+    id: string;
+    warning: boolean;
+  }) => setDeleteInfo({ title, name, id, warning });
+
+  const removeSectionHandler = () => mutateRemoveSection(deleteInfo.id);
 
   return {
     showModalHandler,
@@ -90,5 +116,8 @@ export const useColumnList = () => {
     manageTaskModalInfo,
     hideModalHandler,
     removeSectionHandler,
+    onDelete,
+    deleteInfo,
+    onCloseDelete,
   };
 };

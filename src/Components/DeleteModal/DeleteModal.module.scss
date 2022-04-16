@@ -1,0 +1,36 @@
+.delete-modal {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  &__exit-button {
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+  }
+
+  &__title {
+    color: #34495e;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  &__text {
+    color: #34495e;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  &__buttons {
+    margin-top: 1rem;
+    width: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
+}

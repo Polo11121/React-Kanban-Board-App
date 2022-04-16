@@ -17,4 +17,9 @@
     font-size: 1.5rem;
     margin-left: 0.5rem;
   }
+
+  &__right-content {
+    display: flex;
+    align-items: center;
+  }
 }

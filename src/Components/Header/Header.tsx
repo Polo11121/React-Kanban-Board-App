@@ -1,5 +1,5 @@
 import { useHeader } from 'Pages/Kanban/helpers/useHeader';
-import { AddSectionModal, MembersModal } from 'Components';
+import { AddSectionModal, MembersModal, DeleteModal } from 'Components';
 import { ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Avatar from 'react-avatar';
@@ -21,6 +21,10 @@ export const Header = ({ onLogout }: { onLogout: () => void }) => {
     closeSectionModalHandler,
     isMembersModalOpen,
     closeMembersModalHandler,
+    deleteInfo,
+    onDelete,
+    onCloseDelete,
+    handleRemoveMember,
   } = useHeader();
 
   return (
@@ -72,8 +76,16 @@ export const Header = ({ onLogout }: { onLogout: () => void }) => {
       {isAddSectionModalOpen && (
         <AddSectionModal onClose={closeSectionModalHandler} />
       )}
-      {isMembersModalOpen && (
-        <MembersModal onClose={closeMembersModalHandler} />
+      {isMembersModalOpen && !deleteInfo.id && (
+        <MembersModal onDelete={onDelete} onClose={closeMembersModalHandler} />
+      )}
+      {deleteInfo.id && (
+        <DeleteModal
+          onDelete={handleRemoveMember}
+          onClose={onCloseDelete}
+          deleteTitle="Member"
+          deleteItem={`"${deleteInfo.name}" Member`}
+        />
       )}
     </header>
   );

@@ -8,14 +8,26 @@ import classes from './SectionName.module.scss';
 type SectionNameProps = {
   name: string;
   isOpen: boolean;
+  sectionId: string;
   sectionNumberOfTasks: number;
   sectionMaximumNumberOfTasks: number;
   hideColumnsHandler: () => void;
-  handleRemoveSection: () => void;
+  handleRemoveSection: ({
+    title,
+    name,
+    id,
+    warning,
+  }: {
+    title: string;
+    name: string;
+    id: string;
+    warning: boolean;
+  }) => void;
 };
 
 export const SectionName = ({
   name,
+  sectionId,
   sectionNumberOfTasks,
   hideColumnsHandler,
   isOpen,
@@ -52,6 +64,17 @@ export const SectionName = ({
         </Tooltip>
       </div>
     ) : null}
-    {name !== 'Unassigned' && <ClearIcon onClick={handleRemoveSection} />}
+    {name !== 'Unassigned' && (
+      <ClearIcon
+        onClick={() =>
+          handleRemoveSection({
+            name,
+            id: sectionId,
+            title: 'Section',
+            warning: Boolean(sectionNumberOfTasks),
+          })
+        }
+      />
+    )}
   </div>
 );

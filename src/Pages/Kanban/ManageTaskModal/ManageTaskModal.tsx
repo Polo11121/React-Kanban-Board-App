@@ -2,6 +2,7 @@ import { useManageTaskModal } from 'Pages/Kanban/helpers/useManageTaskModal';
 import { useGetTasksPerMembers } from 'Hooks/useGetTasksPerMembers';
 import { TaskModalInfoType } from 'shared/types/Kanban.type';
 import { Modal, Member } from 'Components';
+import { HuePicker } from 'react-color';
 import { Button, TextField } from '@mui/material';
 import Select from 'react-select';
 import CloseIcon from '@mui/icons-material/Close';
@@ -29,6 +30,8 @@ export const ManageTaskModal = ({
     members,
     changeMembersHandler,
     isDisabled,
+    color,
+    changeColorHandler,
   } = useManageTaskModal({ onClose, modalInfo });
 
   return (
@@ -70,13 +73,17 @@ export const ManageTaskModal = ({
             color="info"
             multiline
             fullWidth
-            rows={5}
+            rows={4}
             focused
           />
         </div>
+        <p style={{ color }}>Choose main color for task</p>
+        <div style={{ marginBottom: '1rem' }}>
+          <HuePicker color={color} onChange={changeColorHandler} />
+        </div>
         <Select
           onChange={changeMembersHandler}
-          maxMenuHeight={200}
+          maxMenuHeight={150}
           styles={{
             valueContainer: (provided) => ({
               ...provided,
@@ -110,7 +117,7 @@ export const ManageTaskModal = ({
               style={{ width: 'fit-content' }}
               size="30"
               fontSize="1rem"
-              name={label}
+              memberName={label}
               src={avatarSrc}
             />
           )}

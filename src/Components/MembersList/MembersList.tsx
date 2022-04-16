@@ -1,9 +1,14 @@
 import { Button, TextField } from '@mui/material';
 import { Member } from 'Components';
+import { useGetMember } from 'Hooks/useGetMember';
 import { useMembersList } from 'Pages/Kanban/helpers/useMembersList';
 import classes from './MembersList.module.scss';
 
-export const MembersList = () => {
+export const MembersList = ({
+  onDelete,
+}: {
+  onDelete: ({ id, name }: { id: string; name: string }) => void;
+}) => {
   const {
     members,
     isTasksPerMembersInvalid,
@@ -13,6 +18,7 @@ export const MembersList = () => {
     actualTasksPerMembers,
     minNumberOfTasks,
   } = useMembersList();
+  const member = useGetMember(JSON.parse(sessionStorage.token).id);
 
   return (
     <div className={classes['members-list']}>
@@ -22,11 +28,14 @@ export const MembersList = () => {
           .map(({ id, name, avatarSrc, taskCount }) => (
             <div key={id}>
               <Member
+                memberId={id}
+                onDelete={onDelete}
                 numberOfTasks={taskCount}
                 style={{ marginBottom: '1rem' }}
-                name={name}
+                memberName={name}
                 src={avatarSrc}
                 key={id}
+                isAdmin={member.role === 'Admin'}
               />
             </div>
           ))}

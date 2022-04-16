@@ -6,6 +6,7 @@ import { useGetColumns } from 'Hooks/useGetColumns';
 import { useCustomToast } from 'shared/helpers/useCustomToast';
 import { TaskModalInfoType } from 'shared/types/Kanban.type';
 import { useQueryClient } from 'react-query';
+import { ColorResult } from 'react-color';
 
 type UseManageTaskModalProps = {
   onClose: () => void;
@@ -20,6 +21,7 @@ export const useManageTaskModal = ({
     name: false,
     description: false,
   });
+  const [color, setColor] = useState('#2c3e50');
   const [inputValues, setInputValues] = useState<{
     name: string;
     description: string;
@@ -63,6 +65,9 @@ export const useManageTaskModal = ({
       members: event,
     }));
   };
+
+  const changeColorHandler = (pickedColor: ColorResult) =>
+    setColor(pickedColor.hex);
 
   const onSuccess = () => {
     const column = columns.find(({ id }) => id === modalInfo.columnId);
@@ -131,6 +136,7 @@ export const useManageTaskModal = ({
           avatarSrc,
         })),
     });
+    setColor(modalInfo.color);
   }, []);
 
   const isNameInvalid = !name.trim().length && isValuesTouched.name;
@@ -144,7 +150,8 @@ export const useManageTaskModal = ({
           chosenMembers
             .map(({ value }) => value)
             .sort()
-            .join(',') !== modalInfo.idMember.sort().join(','))
+            .join(',') !== modalInfo.idMember.sort().join(',')) ||
+        color !== modalInfo.color
       : isValuesTouched.name && isValuesTouched.description;
 
   const { mutate, isLoading } = useManageColumn(onSuccess);
@@ -162,6 +169,7 @@ export const useManageTaskModal = ({
               ? inputValues.members.map(({ value }) => value)
               : [],
             idSection: modalInfo.idSection,
+            color,
           },
           endpoint: `tasks`,
         })
@@ -175,6 +183,7 @@ export const useManageTaskModal = ({
               ? inputValues.members.map(({ value }) => value)
               : [],
             idSection: modalInfo.idSection,
+            color,
           },
           endpoint: `tasks/${modalInfo.taskId}`,
         });
@@ -195,5 +204,7 @@ export const useManageTaskModal = ({
     chosenMembers,
     changeMembersHandler,
     isDisabled,
+    changeColorHandler,
+    color,
   };
 };

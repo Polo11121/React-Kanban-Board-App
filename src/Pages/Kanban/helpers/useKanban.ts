@@ -15,11 +15,15 @@ export const useKanban = () => {
     isOpen: false,
     name: '',
     tasks: [] as unknown as TaskType[],
-    color: '',
     numberOfTasks: 0,
     id: '',
     title: 'add',
   };
+  const [deleteInfo, setDeleteInfo] = useState({
+    id: '',
+    title: '',
+    warning: false,
+  });
   const [columnsData, setColumnsData] = useState<null | ColumnType[]>(null);
   const [manageColumnModalInfo, setManageColumnModalInfo] =
     useState(initialState);
@@ -34,23 +38,42 @@ export const useKanban = () => {
 
   const hideModalHandler = () => setManageColumnModalInfo(initialState);
 
+  const onCloseDelete = () =>
+    setDeleteInfo({ id: '', title: '', warning: false });
+
   const showModalHandler = () =>
     setManageColumnModalInfo((prevInfo) => ({ ...prevInfo, isOpen: true }));
 
   const onSuccess = () => {
     setManageColumnModalInfo(initialState);
-    useCustomToast({ text: 'Column successfully deleted', type: 'success' });
+    useCustomToast({ text: 'Column successfully removed', type: 'success' });
     queryClient.invalidateQueries('columns');
+    onCloseDelete();
   };
 
   const { mutateAsync } = useManageColumn(onSuccess);
 
   const { mutateAsync: mutateColumnsOrder } = useChangeColumnsOrder();
 
-  const deleteColumnHandler = (id: string) =>
-    mutateAsync({ method: 'DELETE', endpoint: `columns/${id}` }).then(() =>
+  const onDelete = ({
+    id,
+    title,
+    warning,
+  }: {
+    id: string;
+    title: string;
+    warning: boolean;
+  }) => setDeleteInfo({ id, title, warning });
+
+  const deleteColumnHandler = () =>
+    mutateAsync({
+      method: 'DELETE',
+      endpoint: `columns/${deleteInfo.id}`,
+    }).then(() =>
       mutateColumnsOrder({
-        columnsOrder: columnsOrder.filter((columnId) => columnId !== id),
+        columnsOrder: columnsOrder.filter(
+          (columnId) => columnId !== deleteInfo.id
+        ),
       }).then(() => {
         queryClient
           .invalidateQueries('columnsOrder')
@@ -62,12 +85,10 @@ export const useKanban = () => {
     id,
     name,
     numberOfTasks,
-    color,
     tasks,
   }: {
     id: string;
     name: string;
-    color: string;
     numberOfTasks: number;
     tasks: TaskType[];
   }) =>
@@ -75,7 +96,6 @@ export const useKanban = () => {
       isOpen: true,
       name,
       tasks,
-      color,
       numberOfTasks,
       id,
       title: 'edit',
@@ -105,5 +125,8 @@ export const useKanban = () => {
       !isSectionsInitialLoaded ||
       !isTasksPerMembersInitialLoaded,
     columnsOrder,
+    deleteInfo,
+    onDelete,
+    onCloseDelete,
   };
 };

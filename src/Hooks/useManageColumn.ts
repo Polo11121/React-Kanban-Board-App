@@ -7,10 +7,10 @@ type payloadTaskType = {
   column?: string;
   idMember?: string[];
   idSection?: string;
+  color: string;
 };
 
 type payloadColumnType = {
-  color: string;
   name: string;
   numberOfTasks: number;
 };

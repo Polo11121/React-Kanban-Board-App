@@ -3,9 +3,8 @@ import { TasksList } from 'Pages/Kanban/TasksList/TasksList';
 import { ManageTaskModal } from 'Pages/Kanban/ManageTaskModal/ManageTaskModal';
 import { useColumnList } from 'Pages/Kanban/helpers/useColumnList';
 import { ColumnType } from 'shared/types/Kanban.type';
-import { useCustomToast } from 'shared/helpers/useCustomToast';
 import { countColumnHeight } from 'shared/helpers/columnHeight';
-import { Column, SectionName } from 'Components';
+import { Column, DeleteModal, SectionName } from 'Components';
 import { Droppable } from 'react-beautiful-dnd';
 import AddIcon from '@mui/icons-material/Add';
 import classes from './ColumnList.module.scss';
@@ -35,6 +34,9 @@ export const ColumnsList = ({
     manageTaskModalInfo,
     hideModalHandler,
     removeSectionHandler,
+    deleteInfo,
+    onCloseDelete,
+    onDelete,
   } = useColumnList();
 
   const sectionNumberOfTasks = columns.reduce(
@@ -53,17 +55,6 @@ export const ColumnsList = ({
     }
   };
 
-  const handleRemoveSection = () => {
-    if (sectionNumberOfTasks > 0) {
-      useCustomToast({
-        text: `Remove tasks from ${section.name} section first`,
-        type: 'error',
-      });
-    } else {
-      removeSectionHandler(section.id);
-    }
-  };
-
   useEffect(() => {
     if (!isSections) {
       localStorage.setItem(section.name, 'open');
@@ -76,15 +67,16 @@ export const ColumnsList = ({
       {isSections && (
         <SectionName
           name={section.name}
+          sectionId={section.id}
           isOpen={isOpen}
-          handleRemoveSection={handleRemoveSection}
+          handleRemoveSection={onDelete}
           hideColumnsHandler={hideColumnsHandler}
           sectionMaximumNumberOfTasks={section.taskLimit}
           sectionNumberOfTasks={sectionNumberOfTasks}
         />
       )}
       <div style={{ display: `${isOpen ? 'flex' : 'none'}` }}>
-        {columns?.map(({ name, color, id, tasks, numberOfTasks }) => (
+        {columns?.map(({ name, id, tasks }) => (
           <Droppable
             isDropDisabled={isDropDisabled}
             key={id}
@@ -106,13 +98,8 @@ export const ColumnsList = ({
                         isDropDisabled={!isDropDisabled}
                         idSection={section.id}
                         columnId={id}
-                        onDelete={deleteTaskHandler}
+                        onDelete={onDelete}
                         onEdit={editTaskHandler}
-                        color={
-                          tasks.length > numberOfTasks && numberOfTasks
-                            ? 'red'
-                            : color
-                        }
                         tasks={tasks.filter(
                           ({ idSection }) => idSection === section.id
                         )}
@@ -135,6 +122,20 @@ export const ColumnsList = ({
           </Droppable>
         ))}
       </div>
+      {deleteInfo.id && (
+        <DeleteModal
+          onDelete={
+            deleteInfo.title === 'Section'
+              ? removeSectionHandler
+              : deleteTaskHandler
+          }
+          onClose={onCloseDelete}
+          deleteTitle={deleteInfo.title}
+          deleteItem={`"${deleteInfo.name}" ${deleteInfo.title}`}
+          isDisabled={deleteInfo.warning}
+          additionalInfo={deleteInfo.warning && 'Remove or move tasks first!'}
+        />
+      )}
       {manageTaskModalInfo.isOpen && (
         <ManageTaskModal
           modalInfo={manageTaskModalInfo}

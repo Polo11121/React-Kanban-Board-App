@@ -1,6 +1,7 @@
 export { AddSectionModal } from './AddSectionModal/AddSectionModal';
 export { Draggable } from './Draggable/Draggable';
 export { Droppable } from './Droppable/Droppable';
+export { DeleteModal } from './DeleteModal/DeleteModal';
 export { Header } from './Header/Header';
 export { Column } from './Column/Column';
 export { ColumnHeader } from './ColumnHeader/ColumnHeader';
