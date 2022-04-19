@@ -1,6 +1,8 @@
 describe('Kanban', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000/');
+    cy.visit(
+      'http://bille-chadsoft-kanban-board.s3-website-us-east-1.amazonaws.com/'
+    );
   });
 
   it('Register user', () => {
