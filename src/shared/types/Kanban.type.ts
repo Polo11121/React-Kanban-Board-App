@@ -5,11 +5,12 @@ export type TaskType = {
   column: string;
   idMember: string[];
   idSection: string;
+  color: string;
 };
 
 export type ColumnType = {
   id: string;
-  color: string;
+
   name: string;
   numberOfTasks: number;
   tasks: TaskType[];
@@ -19,7 +20,7 @@ export type ColumnModalInfoType = {
   isOpen: boolean;
   name: string;
   numberOfTasks: number;
-  color: string;
+
   tasks: TaskType[];
   id: string;
   title: string;
@@ -34,6 +35,7 @@ export type TaskModalInfoType = {
   title: string;
   idSection: string;
   idMember: string[];
+  color: string;
 };
 
 export type MemberType = {

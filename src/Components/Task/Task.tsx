@@ -1,40 +1,12 @@
 import { trimText } from 'shared/helpers/formatters';
 import { useGetMembers } from 'Hooks/useGetMembers';
+import { TaskProps } from 'Components/Task/TaskProps.type';
 import { AvatarGroup, Tooltip } from '@mui/material';
 import { Droppable } from 'react-beautiful-dnd';
-
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Avatar from 'react-avatar';
 import classes from './Task.module.scss';
-
-type TaskProps = {
-  isDropDisabled: boolean;
-  title: string;
-  description: string;
-  color: string;
-  id: string;
-  idSection: string;
-  isDisabled: boolean;
-  members: string[];
-  onDelete: (taskId: string) => void;
-  onEdit: ({
-    columnId,
-    name,
-    description,
-    taskId,
-    idMember,
-    idSection,
-  }: {
-    columnId: string;
-    name: string;
-    description: string;
-    taskId: string;
-    idMember: string[];
-    idSection: string;
-  }) => void;
-  columnId: string;
-};
 
 export const Task = ({
   isDropDisabled,
@@ -51,7 +23,8 @@ export const Task = ({
 }: TaskProps) => {
   const { members: allMembers } = useGetMembers();
 
-  const deleteTaskHandler = () => onDelete(id);
+  const deleteTaskHandler = () =>
+    onDelete({ id, name: title, title: 'Task', warning: false });
 
   const editTaskHandler = () =>
     onEdit({
@@ -60,6 +33,7 @@ export const Task = ({
       description,
       taskId: id,
       idSection,
+      color,
       idMember: members,
     });
 

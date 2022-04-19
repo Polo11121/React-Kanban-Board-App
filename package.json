@@ -56,11 +56,6 @@
       "prettier --write"
     ]
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn run test:noWatch && lint-staged && type:check"
-    }
-  },
   "browserslist": {
     "production": [
       ">0.2%",

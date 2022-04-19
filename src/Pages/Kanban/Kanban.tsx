@@ -4,7 +4,7 @@ import { ColumnsHeaders } from 'Pages/Kanban/ColumnsHeaders/ColumnsHeaders';
 import { ColumnsList } from 'Pages/Kanban/ColumnsList/ColumnsList';
 import { Bench } from 'Pages/Kanban/Bench/Bench';
 import { useMove } from 'Pages/Kanban/helpers/useMove';
-import { Droppable } from 'Components';
+import { Droppable, DeleteModal } from 'Components';
 import { Backdrop, CircularProgress } from '@mui/material';
 import { DragDropContext } from 'react-beautiful-dnd';
 import AddIcon from '@mui/icons-material/Add';
@@ -22,6 +22,9 @@ export const Kanban = () => {
     isInitialLoading,
     sections,
     columnsOrder,
+    onDelete,
+    onCloseDelete,
+    deleteInfo,
   } = useKanban();
 
   const {
@@ -56,7 +59,7 @@ export const Kanban = () => {
             <DragDropContext onDragEnd={handleMoveColumn}>
               <ColumnsHeaders
                 columns={columns}
-                onDelete={deleteColumnHandler}
+                onDelete={onDelete}
                 onEdit={editColumnHandler}
               />
             </DragDropContext>
@@ -73,6 +76,7 @@ export const Kanban = () => {
           </div>
           <div className={classes['kanban__section']}>
             <button
+              data-testid="add-column-button"
               className={classes['kanban__add-column-button']}
               onClick={showModalHandler}
               type="button"
@@ -84,6 +88,18 @@ export const Kanban = () => {
               <Bench isBenchLoading={isBenchLoading} />
             </Droppable>
           </div>
+          {deleteInfo.id && (
+            <DeleteModal
+              onDelete={deleteColumnHandler}
+              onClose={onCloseDelete}
+              deleteTitle="Column"
+              deleteItem={`"${deleteInfo.title}" Column`}
+              isDisabled={deleteInfo.warning}
+              additionalInfo={
+                deleteInfo.warning && 'Remove or move tasks first!'
+              }
+            />
+          )}
           {manageColumnModalInfo.isOpen && (
             <ManageColumnModal
               modalInfo={manageColumnModalInfo}

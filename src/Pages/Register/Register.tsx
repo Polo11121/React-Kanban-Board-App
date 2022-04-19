@@ -35,11 +35,13 @@ export const Register = ({
             <input
               className={classes['register__input']}
               type="text"
+              data-testid="register-email-input"
               value={email}
               onChange={changeEmailHandler}
               placeholder="Email"
             />
             <p
+              data-testid="register-email-input-error"
               style={
                 (!email.includes('@') && isInputValuesTouched.email) ||
                 emailError
@@ -55,11 +57,13 @@ export const Register = ({
             <input
               className={classes['register__input']}
               type="text"
+              data-testid="register-login-input"
               value={login}
               onChange={changeLoginHandler}
               placeholder="Login"
             />
             <p
+              data-testid="register-register-input-error"
               style={
                 !login && isInputValuesTouched.isLoginTouched
                   ? {}
@@ -74,11 +78,13 @@ export const Register = ({
             <input
               className={classes['register__input']}
               type="password"
+              data-testid="register-password-input"
               value={password}
               onChange={changePasswordHandler}
               placeholder="Password"
             />
             <p
+              data-testid="register-password-input-error"
               style={
                 password.length < 6 && isInputValuesTouched.isPasswordTouched
                   ? {}
@@ -95,9 +101,11 @@ export const Register = ({
               type="password"
               value={repeatedPassword}
               onChange={changeRepeatedPasswordHandler}
+              data-testid="register-repeatPassword-input"
               placeholder="Repeat password"
             />
             <p
+              data-testid="register-repeatPassword-input-error"
               style={
                 password !== repeatedPassword &&
                 isInputValuesTouched.isPasswordTouched

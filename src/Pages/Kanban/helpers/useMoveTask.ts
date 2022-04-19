@@ -43,6 +43,7 @@ export const useMoveTask = () => {
         column: columnId,
         idSection: sectionID,
         idMember: task.idMember,
+        color: task.color,
       },
       endpoint: `tasks/${task.id}`,
     }).then(() => {

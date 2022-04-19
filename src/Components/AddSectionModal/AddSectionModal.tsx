@@ -46,7 +46,7 @@ export const AddSectionModal = ({ onClose }: { onClose: () => void }) => {
           helperText={
             isSectionMaximumNumberOfTasksInvalid && 'Invalid number of tasks'
           }
-          data-testid="column-number-of-tasks-input"
+          data-testid="section-task-limit-input"
           margin="normal"
           label="Maximum number of tasks"
           color="info"

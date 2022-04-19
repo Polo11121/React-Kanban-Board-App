@@ -1,5 +1,4 @@
-import { TaskType } from 'shared/types/Kanban.type';
-import { useCustomToast } from 'shared/helpers/useCustomToast';
+import { ColumnHeaderProps } from 'Components/ColumnHeader/ColumnHeaderProps.type';
 import { trimText } from 'shared/helpers/formatters';
 import { Tooltip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -8,30 +7,7 @@ import ReportIcon from '@mui/icons-material/Report';
 import AllInclusiveIcon from '@mui/icons-material/AllInclusive';
 import classes from './ColumnHeader.module.scss';
 
-type ColumnHeaderProps = {
-  title: string;
-  color: string;
-  numberOfTasks: number;
-  onDelete: (id: string) => void;
-  onEdit: ({
-    id,
-    name,
-    numberOfTasks,
-    color,
-    tasks,
-  }: {
-    id: string;
-    name: string;
-    numberOfTasks: number;
-    color: string;
-    tasks: TaskType[];
-  }) => void;
-  id: string;
-  tasks: TaskType[];
-};
-
 export const ColumnHeader = ({
-  color,
   numberOfTasks,
   onDelete,
   onEdit,
@@ -39,23 +15,14 @@ export const ColumnHeader = ({
   tasks,
   title,
 }: ColumnHeaderProps) => {
-  const deleteColumnHandler = () => {
-    if (tasks.length) {
-      useCustomToast({
-        text: `Remove tasks from ${title} column first`,
-        type: 'error',
-      });
-    } else {
-      onDelete(id);
-    }
-  };
+  const deleteColumnHandler = () =>
+    onDelete({ id, title, warning: Boolean(tasks.length) });
 
   const editColumnHandler = () =>
     onEdit({
       id,
       name: title,
       numberOfTasks,
-      color,
       tasks,
     });
 
@@ -64,7 +31,7 @@ export const ColumnHeader = ({
       className={classes['column-header']}
       style={{
         backgroundColor: `${
-          numberOfTasks && tasks.length > numberOfTasks ? 'red' : color
+          numberOfTasks && tasks.length > numberOfTasks ? 'red' : '#2c3e50'
         }`,
       }}
     >

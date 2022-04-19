@@ -26,6 +26,7 @@ export const useGetColumns = () => {
               column: task.column,
               idMember: task.idMember,
               idSection: task.idSection,
+              color: task.color,
             })),
           })
         )
