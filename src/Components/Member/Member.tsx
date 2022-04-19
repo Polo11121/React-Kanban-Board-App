@@ -35,6 +35,7 @@ export const Member = ({
         {numberOfTasks !== undefined && <h3>{numberOfTasks} tasks</h3>}
         {onDelete && memberId && isAdmin && (
           <DeleteIcon
+            data-testid={`${memberName}-delete-icon`}
             onClick={() => onDelete({ id: memberId, name: memberName })}
             style={{ cursor: 'pointer' }}
             fontSize="small"

@@ -12,7 +12,12 @@ export const Main = () => {
   return (
     <div className={classes.main}>
       <div>
-        <img className={classes['main__logo']} src={Logo} alt="logo" />
+        <img
+          data-testid="main-logo"
+          className={classes['main__logo']}
+          src={Logo}
+          alt="logo"
+        />
         <div className={classes['main__buttons']}>
           <button
             onClick={goToLoginPage}

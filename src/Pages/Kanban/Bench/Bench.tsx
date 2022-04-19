@@ -13,7 +13,12 @@ export const Bench = ({ isBenchLoading }: { isBenchLoading: boolean }) => {
   return (
     <div className={classes.bench}>
       <span className={classes['bench__title']}>BENCH</span>
-      <span className={classes['bench__limit']}>
+      <span
+        data-testid={`bench-task-limit-${
+          tasksPerMembers === 0 ? 'infinity' : tasksPerMembers
+        }`}
+        className={classes['bench__limit']}
+      >
         Tasks limit:{' '}
         {tasksPerMembers === 0 ? (
           <AllInclusiveIcon style={{ marginLeft: '5px' }} fontSize="small" />

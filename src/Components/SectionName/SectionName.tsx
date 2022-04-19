@@ -35,6 +35,7 @@ export const SectionName = ({
   handleRemoveSection,
 }: SectionNameProps) => (
   <div
+    data-testid={`section-name-${name}`}
     className={classes['section-name']}
     style={{
       color: `${
@@ -66,6 +67,7 @@ export const SectionName = ({
     ) : null}
     {name !== 'Unassigned' && (
       <ClearIcon
+        data-testid={`section-name-${name}-delete-icon`}
         onClick={() =>
           handleRemoveSection({
             name,

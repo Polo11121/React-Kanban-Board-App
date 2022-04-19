@@ -136,7 +136,10 @@ export const useManageTaskModal = ({
           avatarSrc,
         })),
     });
-    setColor(modalInfo.color);
+
+    if (modalInfo.title === 'edit') {
+      setColor(modalInfo.color);
+    }
   }, []);
 
   const isNameInvalid = !name.trim().length && isValuesTouched.name;

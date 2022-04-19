@@ -11,9 +11,9 @@ export const MembersModal = ({
 }) => {
   return (
     <Modal onClose={onClose}>
-      <div className={classes['members-modal']}>
+      <div data-testid="members-modal" className={classes['members-modal']}>
         <CloseIcon
-          data-testid="close-members-modal-icon"
+          data-testid="members-modal-close-icon"
           onClick={onClose}
           color="warning"
           className={classes['members-modal__exit-button']}

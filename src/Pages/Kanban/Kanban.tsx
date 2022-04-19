@@ -76,6 +76,7 @@ export const Kanban = () => {
           </div>
           <div className={classes['kanban__section']}>
             <button
+              data-testid="add-column-button"
               className={classes['kanban__add-column-button']}
               onClick={showModalHandler}
               type="button"

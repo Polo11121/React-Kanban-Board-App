@@ -46,7 +46,7 @@ export const MembersList = ({
           isTasksPerMembersInvalid &&
           `Invalid number of tasks (min. ${minNumberOfTasks})`
         }
-        data-testid="member-list-number-of-tasks-input"
+        data-testid="members-list-task-input"
         margin="normal"
         type="number"
         label="Maximum member tasks"
@@ -60,6 +60,7 @@ export const MembersList = ({
         member
       </p>
       <Button
+        data-testid="members-list-task-button"
         onClick={submitTasksPerMembersHandler}
         disabled={
           isTasksPerMembersInvalid || actualTasksPerMembers === tasksPerMembers

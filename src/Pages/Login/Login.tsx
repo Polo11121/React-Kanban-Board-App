@@ -20,6 +20,7 @@ export const Login = ({ onLogin }: { onLogin: (token: string) => void }) => {
         <img className={classes['login__logo']} src={Logo} alt="logo" />
         <form onSubmit={loginHandler} className={classes['login__form']}>
           <input
+            data-testid="login-email-input"
             value={email}
             onChange={changeEmailHandler}
             className={classes['login__input']}
@@ -27,6 +28,7 @@ export const Login = ({ onLogin }: { onLogin: (token: string) => void }) => {
             placeholder="Email"
           />
           <input
+            data-testid="login-password-input"
             value={password}
             onChange={changePasswordHandler}
             className={classes['login__input']}
@@ -43,6 +45,7 @@ export const Login = ({ onLogin }: { onLogin: (token: string) => void }) => {
             Login
           </button>
           <p
+            data-testid="login-error"
             style={error ? {} : { visibility: 'hidden' }}
             className={classes['login__error']}
           >

@@ -38,6 +38,7 @@ export const DeleteModal = ({
             cancel
           </Button>
           <Button
+            data-testid="delete-button"
             disabled={isDisabled}
             onClick={onDelete}
             variant="contained"

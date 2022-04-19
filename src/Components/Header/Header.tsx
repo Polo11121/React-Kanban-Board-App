@@ -38,6 +38,7 @@ export const Header = ({ onLogout }: { onLogout: () => void }) => {
       />
       <div className={classes['header__buttons']}>
         <button
+          data-testid="header-members-button"
           onClick={openMembersModalHandler}
           className={classes['header__button']}
           type="button"
@@ -46,6 +47,7 @@ export const Header = ({ onLogout }: { onLogout: () => void }) => {
           Members
         </button>
         <button
+          data-testid="header-section-button"
           onClick={openSectionModalHandler}
           className={classes['header__button']}
           type="button"
@@ -55,7 +57,11 @@ export const Header = ({ onLogout }: { onLogout: () => void }) => {
         </button>
       </div>
       <div className={classes['header__user-info']}>
-        <div className={classes['header__user-avatar']} onClick={handleClick}>
+        <div
+          data-testid="header-user-avatar"
+          className={classes['header__user-avatar']}
+          onClick={handleClick}
+        >
           <Avatar
             name={member.name}
             src={member.photo || member.name}
@@ -65,7 +71,7 @@ export const Header = ({ onLogout }: { onLogout: () => void }) => {
           <span>{member.name || ''}</span>
         </div>
         <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-          <MenuItem onClick={onLogout}>
+          <MenuItem data-testid="header-logout-button" onClick={onLogout}>
             <ListItemIcon>
               <LogoutIcon fontSize="small" />
             </ListItemIcon>
