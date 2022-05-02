@@ -98,7 +98,7 @@ export const useManageColumnModal = ({
           endpoint: 'columns',
         }).then((resp) => {
           mutateColumnsOrder({
-            columnsOrder: [...columnsOrder, resp.data.data.id],
+            columnsOrder: [...columnsOrder, resp.data.data['_id']],
           }).then(() => queryClient.invalidateQueries('columnsOrder'));
         })
       : mutateManageColumn({

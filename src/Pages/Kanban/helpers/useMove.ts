@@ -7,6 +7,7 @@ import { ColumnType } from 'shared/types/Kanban.type';
 import { useCustomToast } from 'shared/helpers/useCustomToast';
 import { useQueryClient } from 'react-query';
 import { DropResult } from 'react-beautiful-dnd';
+import { insert } from 'shared/helpers/functions';
 
 export const useMove = ({
   columnsOrder,
@@ -56,7 +57,7 @@ export const useMove = ({
 
     const { source, destination, draggableId } = result;
 
-    if (source.droppableId === destination?.droppableId || !destination) {
+    if (!destination) {
       return;
     }
 
@@ -74,17 +75,24 @@ export const useMove = ({
           if (id === source.droppableId.split(':')[0]) {
             return {
               ...columns[index],
+              arrayOfTasks: columns[index].arrayOfTasks.filter(
+                (order) => order !== task.id
+              ),
               tasks: tasks.filter(({ id: taskId }) => taskId !== task.id),
             };
           }
 
           return { ...columns[index], tasks };
         });
-
         const columnsWithMovedTask = columnsWithoutMovedTask.map((column) =>
           column.id === destination.droppableId.split(':')[0]
             ? {
                 ...column,
+                arrayOfTasks: insert(
+                  column.arrayOfTasks,
+                  destination.index,
+                  task.id
+                ),
                 tasks: [
                   ...column.tasks,
                   {
@@ -97,13 +105,14 @@ export const useMove = ({
               }
             : column
         );
-
         setColumns(columnsWithMovedTask);
+        console.log(task);
       }
 
       if (task && destination) {
         moveTask({
           task: { ...task, id: draggableId.split('-')[2] },
+          index: destination.index,
           sourceColumnId: source.droppableId,
           destinationColumnId: destination.droppableId,
         });

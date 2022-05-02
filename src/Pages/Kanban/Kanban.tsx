@@ -40,7 +40,7 @@ export const Kanban = () => {
     columnsOrder,
     setColumns,
   });
-
+  console.log(columns);
   return (
     <div className={classes.kanban}>
       {isInitialLoading || columns === null ? (

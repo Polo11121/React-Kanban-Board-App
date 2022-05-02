@@ -4,7 +4,7 @@ import axios from 'axios';
 export const useGetColumnsOrder = () => {
   const getColumnsOrder = (): Promise<string[]> =>
     axios
-      .get('https://chadsoft-kanban-backend.herokuapp.com/api/arrayColumns')
+      .get('http://localhost:3001/api/arrayColumns')
       .then((resp) => resp.data[0]?.idColumns);
 
   const { data } = useQuery('columnsOrder', getColumnsOrder);

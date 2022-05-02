@@ -10,7 +10,7 @@ export type TaskType = {
 
 export type ColumnType = {
   id: string;
-
+  arrayOfTasks: string[];
   name: string;
   numberOfTasks: number;
   tasks: TaskType[];

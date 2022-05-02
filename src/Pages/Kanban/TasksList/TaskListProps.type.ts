@@ -34,4 +34,5 @@ export type TaskListProps = {
   columnId: string;
   isDropDisabled: boolean;
   isTasksLoading: boolean;
+  tasksOrder: string[];
 };
