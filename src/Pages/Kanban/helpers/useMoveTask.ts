@@ -30,6 +30,7 @@ export const useMoveTask = () => {
     destinationColumnId,
   }: UseMoveTaskType) => {
     const columnId = destinationColumnId.split(':')[0];
+    const prevColumnId = sourceColumnId.split(':')[0];
     const sectionID = destinationColumnId.split(':')[1];
 
     setMoveTaskInfo({
@@ -42,6 +43,7 @@ export const useMoveTask = () => {
       payload: {
         index,
         column: columnId,
+        prevColumn: prevColumnId,
         idSection: sectionID,
       },
       endpoint: `tasks/${task.id}`,

@@ -106,7 +106,6 @@ export const useMove = ({
             : column
         );
         setColumns(columnsWithMovedTask);
-        console.log(task);
       }
 
       if (task && destination) {
