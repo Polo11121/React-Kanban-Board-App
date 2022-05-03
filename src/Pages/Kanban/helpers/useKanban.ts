@@ -27,13 +27,14 @@ export const useKanban = () => {
   const [columnsData, setColumnsData] = useState<null | ColumnType[]>(null);
   const [manageColumnModalInfo, setManageColumnModalInfo] =
     useState(initialState);
-  const columns = useGetColumns();
+  const { data: columns, isLoading: isColumnsLoading } = useGetColumns();
   const { sections, isInitialLoaded: isSectionsInitialLoaded } =
     useGetSections();
   const { isInitialLoaded: isMembersInitialLoaded } = useGetMembers();
   const { isInitialLoaded: isTasksPerMembersInitialLoaded } =
     useGetTasksPerMembers();
-  const columnsOrder = useGetColumnsOrder();
+  const { data: columnsOrder, isLoading: isColumnsOrderLoading } =
+    useGetColumnsOrder();
   const queryClient = useQueryClient();
 
   const hideModalHandler = () => setManageColumnModalInfo(initialState);
@@ -109,7 +110,7 @@ export const useKanban = () => {
         ) as ColumnType[]
       );
     }
-  }, [columns, columnsOrder]);
+  }, [isColumnsLoading, isColumnsOrderLoading]);
 
   return {
     editColumnHandler,

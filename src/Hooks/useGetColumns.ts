@@ -2,7 +2,9 @@ import { ColumnType, TaskType } from 'shared/types/Kanban.type';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
-export const useGetColumns = () => {
+type UseGetColumnsType = { data: ColumnType[]; isLoading: boolean };
+
+export const useGetColumns = (): UseGetColumnsType => {
   const getColumns = (): Promise<ColumnType[]> =>
     axios
       .get('http://localhost:3001/api/tasks')
@@ -50,7 +52,10 @@ export const useGetColumns = () => {
         )
       );
 
-  const { data } = useQuery('columns', getColumns);
+  const { data, isFetching } = useQuery('columns', getColumns);
 
-  return data || [];
+  if (data && !isFetching) {
+    return { data, isLoading: isFetching };
+  }
+  return { data: [], isLoading: isFetching };
 };

@@ -1,13 +1,18 @@
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
-export const useGetColumnsOrder = () => {
+type UseGetColumnsOrder = { data: string[]; isLoading: boolean };
+
+export const useGetColumnsOrder = (): UseGetColumnsOrder => {
   const getColumnsOrder = (): Promise<string[]> =>
     axios
       .get('http://localhost:3001/api/arrayColumns')
       .then((resp) => resp.data[0]?.idColumns);
 
-  const { data } = useQuery('columnsOrder', getColumnsOrder);
+  const { data, isFetching } = useQuery('columnsOrder', getColumnsOrder);
 
-  return data || [];
+  if (data) {
+    return { data, isLoading: isFetching };
+  }
+  return { data: [], isLoading: isFetching };
 };

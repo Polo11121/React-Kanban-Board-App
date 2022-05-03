@@ -32,7 +32,7 @@ export const useManageTaskModal = ({
     members: null,
   });
   const { name, description, members: chosenMembers } = inputValues;
-  const columns = useGetColumns();
+  const { data: columns } = useGetColumns();
   const { sections } = useGetSections();
   const { members } = useGetMembers();
   const queryClient = useQueryClient();

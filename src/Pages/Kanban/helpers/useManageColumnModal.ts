@@ -16,7 +16,7 @@ export const useManageColumnModal = ({
   modalInfo,
 }: useManageColumnModalProps) => {
   const queryClient = useQueryClient();
-  const columnsOrder = useGetColumnsOrder();
+  const { data: columnsOrder } = useGetColumnsOrder();
   const [isValuesTouched, setIsValuesTouched] = useState({
     name: false,
     numberOfTasks: false,
