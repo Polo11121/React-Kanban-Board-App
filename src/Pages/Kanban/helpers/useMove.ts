@@ -57,7 +57,11 @@ export const useMove = ({
 
     const { source, destination, draggableId } = result;
 
-    if (!destination) {
+    if (
+      !destination ||
+      (source.droppableId === destination?.droppableId &&
+        source.index === destination.index)
+    ) {
       return;
     }
 
@@ -66,11 +70,9 @@ export const useMove = ({
     } else {
       const task = columns
         ?.find(({ id }) => id === source.droppableId.split(':')[0])
-        ?.tasks.filter(
-          ({ idSection }) => idSection === source.droppableId.split(':')[1]
-        )[source.index];
+        ?.tasks.find(({ id }) => id === draggableId.split('-')[2]);
 
-      if (task) {
+      if (task && columns) {
         const columnsWithoutMovedTask = columns.map(({ id, tasks }, index) => {
           if (id === source.droppableId.split(':')[0]) {
             return {
@@ -157,5 +159,6 @@ export const useMove = ({
     isTaskMoved,
     isLoading,
     isBenchLoading,
+    setIsUserMoved,
   };
 };

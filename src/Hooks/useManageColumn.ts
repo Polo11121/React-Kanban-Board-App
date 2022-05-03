@@ -9,7 +9,7 @@ type payloadTaskType = {
   idSection?: string;
   color?: string;
   index?: number;
-  prevColumn: string;
+  prevColumn?: string;
 };
 
 type payloadColumnType = {

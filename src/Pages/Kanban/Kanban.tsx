@@ -34,13 +34,14 @@ export const Kanban = () => {
     onDragStart,
     isTaskMoved,
     isLoading: isTasksLoading,
+    setIsUserMoved,
     isBenchLoading,
   } = useMove({
     columns,
     columnsOrder,
     setColumns,
   });
-  console.log(columns);
+
   return (
     <div className={classes.kanban}>
       {isInitialLoading || columns === null ? (
@@ -85,7 +86,10 @@ export const Kanban = () => {
               Add Column
             </button>
             <Droppable isDisabled={isTaskMoved || isUserMoved} id="bench">
-              <Bench isBenchLoading={isBenchLoading} />
+              <Bench
+                isBenchLoading={isBenchLoading}
+                setIsUserMoved={setIsUserMoved}
+              />
             </Droppable>
           </div>
           {deleteInfo.id && (
