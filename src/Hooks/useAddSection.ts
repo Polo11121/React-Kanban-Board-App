@@ -9,7 +9,7 @@ export const useAddSection = (onSuccess: () => void) => {
     sectionName: string;
     sectionMaximumNumberOfTasks: string;
   }) =>
-    axios.post('https://chadsoft-kanban-backend.herokuapp.com/api/sections', {
+    axios.post('http://localhost:3001/api/sections', {
       name: sectionName,
       taskLimit: +sectionMaximumNumberOfTasks,
     });

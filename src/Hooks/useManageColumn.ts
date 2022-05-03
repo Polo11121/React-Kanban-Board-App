@@ -5,9 +5,11 @@ type payloadTaskType = {
   name?: string;
   description?: string;
   column?: string;
-  idMember?: string[];
+  idUser?: string[];
   idSection?: string;
-  color: string;
+  color?: string;
+  index?: number;
+  prevColumn?: string;
 };
 
 type payloadColumnType = {
@@ -24,7 +26,7 @@ type useManageTaskProps = {
 export const useManageColumn = (onSuccess?: () => void) => {
   const manageColumn = ({ method, payload, endpoint }: useManageTaskProps) =>
     axios.request({
-      url: `https://chadsoft-kanban-backend.herokuapp.com/api/${endpoint}`,
+      url: `http://localhost:3001/api/${endpoint}`,
       method,
       data: payload || null,
     });

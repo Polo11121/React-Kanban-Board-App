@@ -76,7 +76,7 @@ export const ColumnsList = ({
         />
       )}
       <div style={{ display: `${isOpen ? 'flex' : 'none'}` }}>
-        {columns?.map(({ name, id, tasks }) => (
+        {columns?.map(({ name, id, tasks, arrayOfTasks }) => (
           <Droppable
             isDropDisabled={isDropDisabled}
             key={id}
@@ -94,6 +94,7 @@ export const ColumnsList = ({
                       className={classes['column-list__task-list']}
                     >
                       <TasksList
+                        tasksOrder={arrayOfTasks}
                         isTasksLoading={isTasksLoading}
                         isDropDisabled={!isDropDisabled}
                         idSection={section.id}

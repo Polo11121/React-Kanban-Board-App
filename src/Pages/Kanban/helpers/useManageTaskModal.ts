@@ -77,7 +77,6 @@ export const useManageTaskModal = ({
       text: `Task successfully ${modalInfo.title}ed`,
       type: 'success',
     });
-
     if (
       modalInfo.title === 'add' &&
       column &&
@@ -168,7 +167,7 @@ export const useManageTaskModal = ({
             name: name.trim(),
             description: description.trim(),
             column: modalInfo.columnId,
-            idMember: inputValues.members
+            idUser: inputValues.members
               ? inputValues.members.map(({ value }) => value)
               : [],
             idSection: modalInfo.idSection,
@@ -182,7 +181,7 @@ export const useManageTaskModal = ({
             name: name.trim(),
             description: description.trim(),
             column: modalInfo.columnId,
-            idMember: inputValues.members
+            idUser: inputValues.members
               ? inputValues.members.map(({ value }) => value)
               : [],
             idSection: modalInfo.idSection,

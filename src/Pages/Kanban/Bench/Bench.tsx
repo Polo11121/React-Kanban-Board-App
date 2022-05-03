@@ -1,14 +1,24 @@
+import { Dispatch, SetStateAction } from 'react';
 import { useGetTasksPerMembers } from 'Hooks/useGetTasksPerMembers';
 import { useGetMembers } from 'Hooks/useGetMembers';
 import { Draggable } from 'Components';
 import { CircularProgress, Tooltip } from '@mui/material';
+import ClickNHold from 'react-click-n-hold';
 import AllInclusiveIcon from '@mui/icons-material/AllInclusive';
 import Avatar from 'react-avatar';
 import classes from './Bench.module.scss';
 
-export const Bench = ({ isBenchLoading }: { isBenchLoading: boolean }) => {
+export const Bench = ({
+  isBenchLoading,
+  setIsUserMoved,
+}: {
+  isBenchLoading: boolean;
+  setIsUserMoved: Dispatch<SetStateAction<boolean>>;
+}) => {
   const { members } = useGetMembers();
   const { tasksPerMembers } = useGetTasksPerMembers();
+
+  const moveUserHandler = () => setIsUserMoved(true);
 
   return (
     <div className={classes.bench}>
@@ -39,7 +49,10 @@ export const Bench = ({ isBenchLoading }: { isBenchLoading: boolean }) => {
                 tasksPerMembers !== null &&
                 (taskCount < tasksPerMembers || tasksPerMembers === 0) && (
                   <Draggable key={id} id={id} index={index}>
-                    <div className={classes['bench__member-container']}>
+                    <ClickNHold
+                      onStart={moveUserHandler}
+                      className={classes['bench__member-container']}
+                    >
                       <Tooltip
                         arrow
                         key={id}
@@ -61,7 +74,7 @@ export const Bench = ({ isBenchLoading }: { isBenchLoading: boolean }) => {
                           />
                         </div>
                       </Tooltip>
-                    </div>
+                    </ClickNHold>
                   </Draggable>
                 )
             )

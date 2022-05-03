@@ -8,6 +8,7 @@ import { useQueryClient } from 'react-query';
 
 type UseMoveTaskType = {
   task: TaskType;
+  index: number;
   sourceColumnId: string;
   destinationColumnId: string;
 };
@@ -25,9 +26,11 @@ export const useMoveTask = () => {
   const moveTask = ({
     task,
     sourceColumnId,
+    index,
     destinationColumnId,
   }: UseMoveTaskType) => {
     const columnId = destinationColumnId.split(':')[0];
+    const prevColumnId = sourceColumnId.split(':')[0];
     const sectionID = destinationColumnId.split(':')[1];
 
     setMoveTaskInfo({
@@ -36,14 +39,12 @@ export const useMoveTask = () => {
     });
 
     mutateAsync({
-      method: 'PUT',
+      method: 'PATCH',
       payload: {
-        name: task.name,
-        description: task.description,
+        index,
         column: columnId,
+        prevColumn: prevColumnId,
         idSection: sectionID,
-        idMember: task.idMember,
-        color: task.color,
       },
       endpoint: `tasks/${task.id}`,
     }).then(() => {

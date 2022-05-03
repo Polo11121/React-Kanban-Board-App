@@ -7,6 +7,7 @@ import { ColumnType } from 'shared/types/Kanban.type';
 import { useCustomToast } from 'shared/helpers/useCustomToast';
 import { useQueryClient } from 'react-query';
 import { DropResult } from 'react-beautiful-dnd';
+import { insert } from 'shared/helpers/functions';
 
 export const useMove = ({
   columnsOrder,
@@ -56,7 +57,11 @@ export const useMove = ({
 
     const { source, destination, draggableId } = result;
 
-    if (source.droppableId === destination?.droppableId || !destination) {
+    if (
+      !destination ||
+      (source.droppableId === destination?.droppableId &&
+        source.index === destination.index)
+    ) {
       return;
     }
 
@@ -65,26 +70,31 @@ export const useMove = ({
     } else {
       const task = columns
         ?.find(({ id }) => id === source.droppableId.split(':')[0])
-        ?.tasks.filter(
-          ({ idSection }) => idSection === source.droppableId.split(':')[1]
-        )[source.index];
+        ?.tasks.find(({ id }) => id === draggableId.split('-')[2]);
 
-      if (task) {
+      if (task && columns) {
         const columnsWithoutMovedTask = columns.map(({ id, tasks }, index) => {
           if (id === source.droppableId.split(':')[0]) {
             return {
               ...columns[index],
+              arrayOfTasks: columns[index].arrayOfTasks.filter(
+                (order) => order !== task.id
+              ),
               tasks: tasks.filter(({ id: taskId }) => taskId !== task.id),
             };
           }
 
           return { ...columns[index], tasks };
         });
-
         const columnsWithMovedTask = columnsWithoutMovedTask.map((column) =>
           column.id === destination.droppableId.split(':')[0]
             ? {
                 ...column,
+                arrayOfTasks: insert(
+                  column.arrayOfTasks,
+                  destination.index,
+                  task.id
+                ),
                 tasks: [
                   ...column.tasks,
                   {
@@ -97,13 +107,13 @@ export const useMove = ({
               }
             : column
         );
-
         setColumns(columnsWithMovedTask);
       }
 
       if (task && destination) {
         moveTask({
           task: { ...task, id: draggableId.split('-')[2] },
+          index: destination.index,
           sourceColumnId: source.droppableId,
           destinationColumnId: destination.droppableId,
         });
@@ -149,5 +159,6 @@ export const useMove = ({
     isTaskMoved,
     isLoading,
     isBenchLoading,
+    setIsUserMoved,
   };
 };

@@ -34,6 +34,7 @@ export const Kanban = () => {
     onDragStart,
     isTaskMoved,
     isLoading: isTasksLoading,
+    setIsUserMoved,
     isBenchLoading,
   } = useMove({
     columns,
@@ -85,7 +86,10 @@ export const Kanban = () => {
               Add Column
             </button>
             <Droppable isDisabled={isTaskMoved || isUserMoved} id="bench">
-              <Bench isBenchLoading={isBenchLoading} />
+              <Bench
+                isBenchLoading={isBenchLoading}
+                setIsUserMoved={setIsUserMoved}
+              />
             </Droppable>
           </div>
           {deleteInfo.id && (
