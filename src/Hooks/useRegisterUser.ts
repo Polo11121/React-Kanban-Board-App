@@ -5,7 +5,7 @@ import axios from 'axios';
 export const useRegisterUser = (onError: (data: any) => void) => {
   const registerUser = ({ name, photo, email, password }: UserType) =>
     axios.post(
-      'http://localhost:3001/api/users',
+      'https://chadsoft-kanban-backend.herokuapp.com/api/users',
       photo
         ? {
             name,

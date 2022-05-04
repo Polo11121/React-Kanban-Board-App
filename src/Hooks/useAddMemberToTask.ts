@@ -6,9 +6,12 @@ export const useAddMemberToTask = (
   onError: (data: any) => void
 ) => {
   const addMemberToTask = ({ id, userId }: { id: string; userId: string }) =>
-    axios.patch(`http://localhost:3001/api/tasks/${id}/addUser`, {
-      idUser: userId,
-    });
+    axios.patch(
+      `https://chadsoft-kanban-backend.herokuapp.com/api/tasks/${id}/addUser`,
+      {
+        idUser: userId,
+      }
+    );
 
   const { mutate, isLoading } = useMutation(addMemberToTask, {
     onSuccess,

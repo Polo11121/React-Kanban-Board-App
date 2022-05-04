@@ -4,7 +4,7 @@ import axios from 'axios';
 export const useChangeColumnsOrder = (onSuccess?: () => void) => {
   const changeColumnsOrder = ({ columnsOrder }: { columnsOrder: string[] }) =>
     axios.patch(
-      'http://localhost:3001/api/arrayColumns/624b532f3f95f547a043ea4c',
+      'https://chadsoft-kanban-backend.herokuapp.com/api/arrayColumns/624b532f3f95f547a043ea4c',
       {
         idColumns: columnsOrder,
       }

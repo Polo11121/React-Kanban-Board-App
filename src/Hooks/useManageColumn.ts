@@ -26,7 +26,7 @@ type useManageTaskProps = {
 export const useManageColumn = (onSuccess?: () => void) => {
   const manageColumn = ({ method, payload, endpoint }: useManageTaskProps) =>
     axios.request({
-      url: `http://localhost:3001/api/${endpoint}`,
+      url: `https://chadsoft-kanban-backend.herokuapp.com/api/${endpoint}`,
       method,
       data: payload || null,
     });

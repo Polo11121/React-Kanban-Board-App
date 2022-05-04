@@ -6,7 +6,7 @@ type UseGetColumnsOrder = { data: string[]; isLoading: boolean };
 export const useGetColumnsOrder = (): UseGetColumnsOrder => {
   const getColumnsOrder = (): Promise<string[]> =>
     axios
-      .get('http://localhost:3001/api/arrayColumns')
+      .get('https://chadsoft-kanban-backend.herokuapp.com/api/arrayColumns')
       .then((resp) => resp.data[0]?.idColumns);
 
   const { data, isFetching } = useQuery('columnsOrder', getColumnsOrder);

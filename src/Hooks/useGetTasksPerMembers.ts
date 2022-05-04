@@ -4,7 +4,7 @@ import axios from 'axios';
 export const useGetTasksPerMembers = () => {
   const getTasksPerMembers = (): Promise<number> =>
     axios
-      .get('http://localhost:3001/api/userTasksLimit')
+      .get('https://chadsoft-kanban-backend.herokuapp.com/api/userTasksLimit')
       .then((resp) => resp.data[0].userTaskLimit);
 
   const { data, isFetchedAfterMount } = useQuery(

@@ -9,15 +9,17 @@ type useGetMembersType = {
 
 export const useGetMembers = (): useGetMembersType => {
   const getMembers = () =>
-    axios.get('http://localhost:3001/api/users').then((resp) =>
-      resp.data.map((member: { [x: string]: any; name: any }) => ({
-        id: member['_id'],
-        name: member.name,
-        avatarSrc: member.photo,
-        email: member.email,
-        taskCount: member.taskCount,
-      }))
-    );
+    axios
+      .get('https://chadsoft-kanban-backend.herokuapp.com/api/users')
+      .then((resp) =>
+        resp.data.map((member: { [x: string]: any; name: any }) => ({
+          id: member['_id'],
+          name: member.name,
+          avatarSrc: member.photo,
+          email: member.email,
+          taskCount: member.taskCount,
+        }))
+      );
 
   const { data, isFetchedAfterMount } = useQuery('members', getMembers);
 

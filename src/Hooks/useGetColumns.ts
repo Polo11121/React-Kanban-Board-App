@@ -7,7 +7,7 @@ type UseGetColumnsType = { data: ColumnType[]; isLoading: boolean };
 export const useGetColumns = (): UseGetColumnsType => {
   const getColumns = (): Promise<ColumnType[]> =>
     axios
-      .get('http://localhost:3001/api/tasks')
+      .get('https://chadsoft-kanban-backend.herokuapp.com/api/tasks')
       .then((respTasks) =>
         respTasks.data.map(
           (task: {
@@ -30,26 +30,28 @@ export const useGetColumns = (): UseGetColumnsType => {
         )
       )
       .then((tasks) =>
-        axios.get('http://localhost:3001/api/columns').then((resp) =>
-          resp.data.map(
-            (column: {
-              [x: string]: any;
-              name: any;
-              numberOfTasks: any;
-              color: any;
-              tasks: any[];
-            }) => ({
-              arrayOfTasks: column.arrayOfTasks,
-              id: column['_id'],
-              color: column.color,
-              name: column.name,
-              numberOfTasks: column.numberOfTasks,
-              tasks: tasks.filter(
-                (task: TaskType) => task.column === column['_id']
-              ),
-            })
+        axios
+          .get('https://chadsoft-kanban-backend.herokuapp.com/api/columns')
+          .then((resp) =>
+            resp.data.map(
+              (column: {
+                [x: string]: any;
+                name: any;
+                numberOfTasks: any;
+                color: any;
+                tasks: any[];
+              }) => ({
+                arrayOfTasks: column.arrayOfTasks,
+                id: column['_id'],
+                color: column.color,
+                name: column.name,
+                numberOfTasks: column.numberOfTasks,
+                tasks: tasks.filter(
+                  (task: TaskType) => task.column === column['_id']
+                ),
+              })
+            )
           )
-        )
       );
 
   const { data, isFetching } = useQuery('columns', getColumns);

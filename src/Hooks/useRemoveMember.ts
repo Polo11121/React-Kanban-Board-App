@@ -3,7 +3,9 @@ import axios from 'axios';
 
 export const useRemoveMember = (onSuccess: () => void) => {
   const removeSection = (memberId: string) =>
-    axios.delete(`http://localhost:3001/api/users/${memberId}`);
+    axios.delete(
+      `https://chadsoft-kanban-backend.herokuapp.com/api/users/${memberId}`
+    );
 
   const { mutate } = useMutation(removeSection, {
     onSuccess,
