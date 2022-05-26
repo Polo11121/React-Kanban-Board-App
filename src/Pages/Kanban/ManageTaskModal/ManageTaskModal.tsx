@@ -2,7 +2,7 @@ import { useManageTaskModal } from 'Pages/Kanban/helpers/useManageTaskModal';
 import { useGetTasksPerMembers } from 'Hooks/useGetTasksPerMembers';
 import { TaskModalInfoType } from 'shared/types/Kanban.type';
 import { Modal, Member } from 'Components';
-import { HuePicker } from 'react-color';
+import { CirclePicker } from 'react-color';
 import { Button, TextField } from '@mui/material';
 import Select from 'react-select';
 import CloseIcon from '@mui/icons-material/Close';
@@ -79,7 +79,20 @@ export const ManageTaskModal = ({
         </div>
         <p style={{ color }}>Choose main color for task</p>
         <div style={{ marginBottom: '1rem' }}>
-          <HuePicker color={color} onChange={changeColorHandler} />
+          <CirclePicker
+            width="300px"
+            colors={[
+              '#2c3e50',
+              '#3498db',
+              '#9b59b6',
+              '#2ecc71',
+              '#1abc9c',
+              '#f1c40f',
+              '#e67e22',
+            ]}
+            color={color}
+            onChange={changeColorHandler}
+          />
         </div>
         <Select
           onChange={changeMembersHandler}
