@@ -22,7 +22,7 @@
 
   &__add-column-button {
     align-items: center;
-    background-color: #e7e6e6;
+    background-color: rgb(44, 62, 80);
     border: solid transparent;
     border-radius: 0.5rem;
     cursor: pointer;
@@ -31,12 +31,8 @@
     height: 2.5rem;
     justify-content: center;
     min-width: 10rem;
-    opacity: 0.5;
-    transition-duration: 0.4s;
-
-    &:hover {
-      background-color: #ccc7c7;
-    }
+    color: white;
+    font-weight: 800;
   }
 
   &__section {
